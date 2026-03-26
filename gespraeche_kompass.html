@@ -196,7 +196,7 @@ textarea:focus, input[type=text]:focus, select:focus { border-color: var(--teal-
 <header class="app-header">
   <div>
     <h1>Gesprächs-Kompass</h1>
-    <div class="sub">Sensing · Klären · Entscheiden</div>
+    <div class="sub">Change Maker Karriere Beratung · Kathrin Heinrich</div>
   </div>
   <div class="hbadge" id="count-badge">0 Gespräche</div>
 </header>
@@ -217,7 +217,7 @@ textarea:focus, input[type=text]:focus, select:focus { border-color: var(--teal-
       <div style="background:var(--teal-dark);padding:28px 20px 20px;position:relative;overflow:hidden;">
         <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;background:rgba(93,167,178,.15);border-radius:50%;"></div>
         <h2 style="font-family:'DM Serif Display',serif;font-size:26px;color:var(--white);line-height:1.25;position:relative;z-index:1;">Klarheit entsteht<br>im Gespräch.</h2>
-        <div style="font-size:12px;color:var(--teal-light);margin-top:6px;position:relative;z-index:1;">Sensing Phase · Design Thinking · Change Maker Karriere Beratung</div>
+        <div style="font-size:12px;color:var(--teal-light);margin-top:6px;position:relative;z-index:1;">Sensing Phase · Design Thinking · Change Maker Karriere Beratung · Kathrin Heinrich</div>
       </div>
       <div style="padding:20px;">
         <p style="font-size:13px;line-height:1.8;color:var(--text);margin-bottom:12px;">Du stehst vor einer wichtigen Entscheidung. Bevor du entscheidest — sprich. Mit Menschen die dein System kennen. Mit Menschen die außerhalb stehen. Mit dir selbst nach jedem Gespräch.</p>
@@ -271,20 +271,20 @@ textarea:focus, input[type=text]:focus, select:focus { border-color: var(--teal-
         <div class="field-wrap">
           <div class="field-label">Name der Option</div>
           <div class="field-sub">Kurz und prägnant — wie du sie intern nennst</div>
-          <input type="text" id="opt-name" placeholder="z.B. Rolle A beim neuen Eigentümer · Externe Option · Angebot von Firma X">
+          <input type="text" id="opt-name" placeholder="z.B. Senior Director beim neuen Eigentümer · Head of Strategy extern · Interim-Rolle">
         </div>
         <div class="field-wrap">
           <div class="field-label">Beschreibung</div>
           <div class="field-sub">Was beinhaltet diese Option konkret?</div>
-          <textarea id="opt-desc" placeholder="z.B. Senior Director Rolle · gleiche Stufe · neues Team · Reporting an neuen CCO..."></textarea>
+          <textarea id="opt-desc" placeholder="z.B. Senior Director Strategie · gleiches Level wie bisher · neues Reporting an CCO · Team von 8 Personen · Standort München bleibt..."></textarea>
         </div>
         <div class="field-wrap">
           <div class="field-label">Was zieht mich an dieser Option an?</div>
-          <textarea id="opt-pro" placeholder="Was macht diese Option interessant für mich?" style="min-height:56px;"></textarea>
+          <textarea id="opt-pro" placeholder="z.B. Bekanntes Umfeld · ich kenne das Produkt · kurze Einarbeitungszeit · gutes Gehalt gesichert..." style="min-height:56px;"></textarea>
         </div>
         <div class="field-wrap">
           <div class="field-label">Was gibt mir zu denken?</div>
-          <textarea id="opt-con" placeholder="Was ist unklar · was besorgt mich · was fehlt noch?" style="min-height:56px;"></textarea>
+          <textarea id="opt-con" placeholder="z.B. Neue Eigentümerstruktur unklar · wer hat wirklich das Sagen? · Kulturwandel absehbar · bin ich da noch richtig?" style="min-height:56px;"></textarea>
         </div>
         <button class="save-btn" onclick="saveOption()">Option speichern</button>
       </div>
@@ -314,7 +314,7 @@ textarea:focus, input[type=text]:focus, select:focus { border-color: var(--teal-
       <div class="card-body">
         <div class="field-wrap">
           <div class="field-label">Mit wem?</div>
-          <input type="text" id="p-person" placeholder="Name · Funktion · warum diese Person?">
+          <input type="text" id="p-person" placeholder="z.B. Maria Schneider · CFO · ehemalige Kollegin bei Firma X">
         </div>
         <div class="field-wrap">
           <div class="field-label">Zu welcher Option?</div>
@@ -325,11 +325,11 @@ textarea:focus, input[type=text]:focus, select:focus { border-color: var(--teal-
         <div class="field-wrap">
           <div class="field-label">Warum diese Person?</div>
           <div class="field-sub">Welche Perspektive bringt sie ein die du noch nicht hast?</div>
-          <textarea id="p-warum" placeholder="z.B. Sie kennt die neue Eigentümerstruktur von innen · Er hat eine ähnliche Entscheidung vor 2 Jahren getroffen · Sie steht außerhalb des Systems" style="min-height:56px;"></textarea>
+          <textarea id="p-warum" placeholder="z.B. Sie kennt den neuen Eigentümer von innen · Er hat vor 2 Jahren eine ähnliche Übernahme erlebt · Sie steht völlig außerhalb und sieht das mit anderen Augen" style="min-height:56px;"></textarea>
         </div>
         <div class="field-wrap">
           <div class="field-label">Geplant für</div>
-          <input type="text" id="p-wann" placeholder="z.B. Diese Woche · KW 14 · vor dem 15. April">
+          <input type="text" id="p-wann" placeholder="z.B. Diese Woche · KW 14 · vor dem 15. April · so bald wie möglich">
         </div>
         <button class="save-btn" onclick="savePlanung()">Gespräch einplanen</button>
       </div>
@@ -382,15 +382,15 @@ textarea:focus, input[type=text]:focus, select:focus { border-color: var(--teal-
         <div class="card-body">
           <div class="field-wrap">
             <div class="field-label">Was verdichtet sich — wohin zieht es mich?</div>
-            <textarea id="gb-verdichtet" placeholder="Welche Option bekommt mehr Energie? Was spüre ich wenn ich an die nächsten 3 Jahre denke?"></textarea>
+            <textarea id="gb-verdichtet" placeholder="z.B. Nach drei Gesprächen merke ich dass Option B mich am meisten anzieht — nicht rational, sondern energetisch. Wenn ich daran denke werde ich wacher. Bei Option A werde ich ruhiger — aber nicht im guten Sinne."></textarea>
           </div>
           <div class="field-wrap">
             <div class="field-label">Was ist noch unklar — was brauche ich noch?</div>
-            <textarea id="gb-unklar" placeholder="Welche Fragen sind noch offen? Mit wem muss ich noch sprechen?"></textarea>
+            <textarea id="gb-unklar" placeholder="z.B. Ich muss noch mit jemandem sprechen der die externe Firma von innen kennt. Und ich will verstehen wie stabil die Führungsstruktur wirklich ist bevor ich entscheide."></textarea>
           </div>
           <div class="field-wrap">
             <div class="field-label">Was bringt mich in die nächste Session mit Kathrin?</div>
-            <textarea id="gb-session" placeholder="Erkenntnisse · Fragen · was ich besprechen möchte..." style="min-height:56px;"></textarea>
+            <textarea id="gb-session" placeholder="z.B. Die Spannung zwischen meinem Kopf und meinem Bauch bei Option A. Das Gefühl dass ich noch nicht alle Informationen habe. Die Frage ob ich bereit bin für den Schritt nach außen." style="min-height:56px;"></textarea>
           </div>
           <button class="save-btn" onclick="saveGesamtbild()">Reflexion speichern</button>
         </div>
@@ -443,7 +443,7 @@ textarea:focus, input[type=text]:focus, select:focus { border-color: var(--teal-
 
       <div class="field-wrap">
         <div class="field-label">Mit wem spreche ich?</div>
-        <input type="text" id="g-person" placeholder="Name · Funktion · Kontext">
+        <input type="text" id="g-person" placeholder="z.B. Thomas Berger · neuer CCO · kennt die Eigentümerstruktur von innen">
       </div>
       <div class="field-wrap">
         <div class="field-label">Zu welcher Option?</div>
@@ -463,16 +463,16 @@ textarea:focus, input[type=text]:focus, select:focus { border-color: var(--teal-
         <div style="font-size:11px;color:var(--purple-fg);line-height:1.6;margin-bottom:12px;font-style:italic;">Wer mit klarer Intention in ein Gespräch geht hört anders zu — und bekommt andere Antworten. Nimm dir 2 Minuten dafür.</div>
         <div class="field-wrap">
           <div class="field-label" style="color:var(--purple-fg);">Was will ich aus diesem Gespräch mitnehmen?</div>
-          <textarea id="g-intention-was" placeholder="Das konkrete Ergebnis das ich anstrebe — z.B. Ein ehrliches Bild der Teamkultur. Klarheit über das tatsächliche Mandat. Eine Einschätzung ob ich dieser Person vertrauen kann." style="min-height:56px;"></textarea>
+          <textarea id="g-intention-was" placeholder="z.B. Ein ehrliches Bild der Machtstrukturen nach der Übernahme. Verstehen ob mein bisheriger Einfluss in der neuen Struktur erhalten bleibt. Spüren ob ich dieser Person vertrauen kann." style="min-height:56px;"></textarea>
         </div>
         <div class="field-wrap">
           <div class="field-label" style="color:var(--purple-fg);">Was will ich in diesem Gespräch NICHT tun?</div>
           <div class="field-sub">Was soll dich nicht verleiten — worauf willst du bewusst verzichten?</div>
-          <textarea id="g-intention-nicht" placeholder="z.B. Ich will mich nicht von einer guten Präsentation blenden lassen. Ich will nicht zu früh zustimmen. Ich will keine Zusagen machen." style="min-height:56px;"></textarea>
+          <textarea id="g-intention-nicht" placeholder="z.B. Ich will mich nicht von einer guten Präsentation blenden lassen. Ich will keine voreiligen Zusagen machen. Ich will nicht zu früh meine Karten zeigen." style="min-height:56px;"></textarea>
         </div>
         <div class="field-wrap" style="margin-bottom:0;">
           <div class="field-label" style="color:var(--purple-fg);">Wie will ich in diesem Gespräch wirken?</div>
-          <textarea id="g-intention-wirken" placeholder="z.B. Ich will neugierig und offen wirken — nicht evaluierend. Ich will zuhören bevor ich spreche. Ich will Stärke ohne Druck zeigen." style="min-height:56px;margin-bottom:0;"></textarea>
+          <textarea id="g-intention-wirken" placeholder="z.B. Neugierig und offen — nicht evaluierend. Ich will zuhören bevor ich spreche. Ich will Stärke ohne Druck zeigen." style="min-height:56px;margin-bottom:0;"></textarea>
         </div>
       </div>
 
@@ -497,16 +497,16 @@ textarea:focus, input[type=text]:focus, select:focus { border-color: var(--teal-
       <div class="field-wrap">
         <div class="field-label">Was habe ich erfahren?</div>
         <div class="field-sub">Fakten · Informationen · was neu ist</div>
-        <textarea id="g-erfahren" placeholder="Was war die wichtigste Information die ich bekommen habe?"></textarea>
+        <textarea id="g-erfahren" placeholder="z.B. Die neue Struktur sieht drei Berichtslinien vor — meine Rolle wird direkt dem neuen Group CEO berichten. Das Team wird nicht verkleinert. Budget-Entscheidungen bleiben lokal."></textarea>
       </div>
       <div class="field-wrap">
         <div class="field-label">Was hat mich überrascht?</div>
-        <textarea id="g-ueberraschung" placeholder="Was war anders als erwartet? Was hat mich aufhorchen lassen?" style="min-height:56px;"></textarea>
+        <textarea id="g-ueberraschung" placeholder="z.B. Er war überraschend offen — hat sogar von internen Spannungen erzählt die ich nicht erwartet hätte. Oder: Die Rolle ist deutlich größer als in der offiziellen Beschreibung." style="min-height:56px;"></textarea>
       </div>
       <div class="field-wrap">
         <div class="field-label">Wie fühlt sich die Option jetzt an — körperlich?</div>
         <div class="field-sub">Bauchgefühl · Energie · Resonanz im Körper</div>
-        <textarea id="g-koerper" placeholder="z.B. Ich spüre Aufregung wenn ich daran denke. Oder: Mein Körper zieht sich zusammen. Oder: Ich fühle mich leicht und offen." style="min-height:56px;"></textarea>
+        <textarea id="g-koerper" placeholder="z.B. Ich spüre Aufregung — mein Herzschlag hat sich beschleunigt als er von der Rolle erzählt hat. Oder: Ich fühle mich ruhig aber nicht wirklich lebendig. Oder: Da ist eine Enge in meiner Brust." style="min-height:56px;"></textarea>
       </div>
 
       <div class="skala-wrap">
@@ -568,6 +568,7 @@ textarea:focus, input[type=text]:focus, select:focus { border-color: var(--teal-
 <!-- FAB -->
 <div class="fab-row">
   <button class="fab gold" onclick="createLink()">🔗 Link erstellen</button>
+  <button class="fab" style="background:var(--teal-mid);" onclick="exportPDF()">📄 PDF Export</button>
   <button class="fab" onclick="openNeuesGespraech()">+ Gespräch</button>
 </div>
 
@@ -1059,6 +1060,115 @@ function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── PDF EXPORT ────────────────────────────────────────────
+function exportPDF() {
+  const today = new Date().toLocaleDateString('de-DE', { day:'numeric', month:'long', year:'numeric' });
+
+  let html = `
+    <html><head><meta charset="UTF-8">
+    <style>
+      body { font-family: Arial, sans-serif; color: #1a1a1a; padding: 32px; max-width: 780px; margin: 0 auto; }
+      h1 { color: #0B3948; font-size: 22px; margin-bottom: 4px; }
+      .sub { color: #5da7b2; font-size: 12px; margin-bottom: 24px; }
+      h2 { color: #0B3948; font-size: 15px; margin: 24px 0 8px; border-bottom: 2px solid #c8e6ea; padding-bottom: 4px; }
+      h3 { color: #9f8252; font-size: 13px; margin: 16px 0 6px; }
+      .label { font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: .06em; color: #8e897a; margin-bottom: 3px; }
+      .val { font-size: 12px; line-height: 1.7; margin-bottom: 10px; padding: 8px 10px; background: #fffcf2; border-left: 3px solid #c8e6ea; border-radius: 4px; white-space: pre-wrap; }
+      .val.gold { border-left-color: #9f8252; }
+      .val.purple { border-left-color: #512da8; background: #ede7f6; }
+      .score { display: inline-block; background: #0B3948; color: white; padding: 3px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; margin: 4px 0 10px; }
+      .option-block { background: #f5f0e8; border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; }
+      .gespraech-block { border: 1.5px solid #dbd8ca; border-radius: 8px; padding: 14px; margin-bottom: 16px; page-break-inside: avoid; }
+      .gespraech-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+      .person { font-size: 15px; font-weight: bold; color: #0B3948; }
+      .datum { font-size: 11px; color: #8e897a; }
+      .divider { border: none; border-top: 1px solid #dbd8ca; margin: 12px 0; }
+      .section-vor { color: #5da7b2; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+      .section-nach { color: #9f8252; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+      .footer { margin-top: 32px; padding-top: 12px; border-top: 1px solid #dbd8ca; font-size: 10px; color: #8e897a; text-align: center; }
+      @media print { .gespraech-block { page-break-inside: avoid; } }
+    </style>
+    </head><body>
+    <h1>🧭 Gesprächs-Kompass</h1>
+    <div class="sub">Change Maker Karriere Beratung · Kathrin Heinrich · Exportiert am ${today}</div>
+  `;
+
+  // OPTIONEN
+  if (appData.optionen.length > 0) {
+    html += `<h2>Meine Optionen</h2>`;
+    appData.optionen.forEach((opt, i) => {
+      const avg = getAvgScore(opt.id);
+      const gs = appData.gespraeche.filter(g => g.optionId == opt.id).length;
+      html += `<div class="option-block">
+        <div style="font-size:13px;font-weight:bold;color:#0B3948;">Option ${i+1}: ${opt.name}</div>
+        ${opt.desc ? `<div style="font-size:11px;color:#8e897a;margin-top:4px;">${opt.desc}</div>` : ''}
+        ${opt.pro ? `<div style="font-size:11px;color:#2d6a2d;margin-top:6px;">✅ ${opt.pro}</div>` : ''}
+        ${opt.con ? `<div style="font-size:11px;color:#856404;margin-top:4px;">⚠️ ${opt.con}</div>` : ''}
+        <div style="margin-top:8px;font-size:11px;color:#0B3948;">Ø Empfinden: <strong>${avg > 0 ? avg.toFixed(1) + '/10' : 'noch kein Empfinden'}</strong> · ${gs} Gespräch(e)</div>
+      </div>`;
+    });
+  }
+
+  // PLANUNG
+  if (appData.planung && appData.planung.length > 0) {
+    html += `<h2>Gesprächsplanung</h2>`;
+    const statusLabel = { geplant: '📅 Geplant', stattgefunden: '✅ Stattgefunden', verschoben: '⏸ Verschoben' };
+    appData.planung.forEach(p => {
+      html += `<div style="display:flex;justify-content:space-between;padding:8px 10px;background:#f5f0e8;border-radius:6px;margin-bottom:6px;">
+        <div><strong>${p.person}</strong>${p.optionName ? ` · ${p.optionName}` : ''}${p.wann ? ` · ${p.wann}` : ''}</div>
+        <div style="font-size:11px;">${statusLabel[p.status]||p.status}</div>
+      </div>`;
+    });
+  }
+
+  // GESPRÄCHE
+  if (appData.gespraeche.length > 0) {
+    html += `<h2>Dokumentierte Gespräche (${appData.gespraeche.length})</h2>`;
+    appData.gespraeche.forEach((g, i) => {
+      const d = new Date(g.datum + 'T00:00:00');
+      const dateStr = d.toLocaleDateString('de-DE', { day:'numeric', month:'long', year:'numeric' });
+      html += `<div class="gespraech-block">
+        <div class="gespraech-header">
+          <div class="person">👤 ${g.person}</div>
+          <div class="datum">${dateStr}${g.optionName ? ' · ' + g.optionName : ''}</div>
+        </div>
+        <div class="section-vor">VOR DEM GESPRÄCH</div>
+        ${g.wissen ? `<div class="label">Was ich wissen wollte</div><div class="val">${g.wissen}</div>` : ''}
+        ${g.intentionWas ? `<div class="label">Intention — Was</div><div class="val purple">${g.intentionWas}</div>` : ''}
+        ${g.intentionNicht ? `<div class="label">Intention — Was nicht</div><div class="val purple">${g.intentionNicht}</div>` : ''}
+        ${g.intentionWirken ? `<div class="label">Intention — Wie wirken</div><div class="val purple">${g.intentionWirken}</div>` : ''}
+        ${g.haltung && g.haltung.length > 0 ? `<div class="label">Haltung</div><div class="val">${g.haltung.join(' · ')}${g.haltungFreitext ? ' · ' + g.haltungFreitext : ''}</div>` : ''}
+        <hr class="divider">
+        <div class="section-nach">NACH DEM GESPRÄCH</div>
+        ${g.erfahren ? `<div class="label">Was ich erfahren habe</div><div class="val">${g.erfahren}</div>` : ''}
+        ${g.ueberraschung ? `<div class="label">Was mich überrascht hat</div><div class="val">${g.ueberraschung}</div>` : ''}
+        ${g.koerper ? `<div class="label">Körpergefühl</div><div class="val">${g.koerper}</div>` : ''}
+        ${g.empfinden ? `<div class="label">Empfinden auf Skala 1-10</div><div class="score">${g.empfinden}/10</div>` : ''}
+        ${g.gruende ? `<div class="label">3 gute Gründe für diese Option</div><div class="val gold">${g.gruende}</div>` : ''}
+        ${g.weitere ? `<div class="label">Weitere Gesprächspartner</div><div class="val">${g.weitere}</div>` : ''}
+        ${g.neueOptionen ? `<div class="label">Neue Optionen entstanden</div><div class="val">${g.neueOptionen}</div>` : ''}
+        ${g.fragen ? `<div class="label">Offene Fragen</div><div class="val">${g.fragen}</div>` : ''}
+      </div>`;
+    });
+  }
+
+  // GESAMTBILD
+  if (appData.gesamtbild && (appData.gesamtbild.verdichtet || appData.gesamtbild.unklar || appData.gesamtbild.session)) {
+    html += `<h2>Gesamtreflexion</h2>`;
+    if (appData.gesamtbild.verdichtet) html += `<div class="label">Was sich verdichtet</div><div class="val">${appData.gesamtbild.verdichtet}</div>`;
+    if (appData.gesamtbild.unklar) html += `<div class="label">Was noch unklar ist</div><div class="val">${appData.gesamtbild.unklar}</div>`;
+    if (appData.gesamtbild.session) html += `<div class="label">Für die nächste Session mit Kathrin</div><div class="val gold">${appData.gesamtbild.session}</div>`;
+  }
+
+  html += `<div class="footer">Change Maker Karriere Beratung · Kathrin Heinrich · info@kathrinheinrich.de</div>
+  </body></html>`;
+
+  const win = window.open('', '_blank');
+  win.document.write(html);
+  win.document.close();
+  setTimeout(() => { win.print(); }, 500);
 }
 
 // ── START ─────────────────────────────────────────────────
