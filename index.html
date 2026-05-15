@@ -1,0 +1,2038 @@
+<!DOCTYPE html>
+<!--
+  ═══════════════════════════════════════════════════════════════
+  GESPRÄCHS-KOMPASS · Change Maker Karriere Beratung
+  Version 7.0 · 15. Mai 2026
+  Änderungen ggü. v6:
+  · Sprache: generisches Femininum entfernt (Kathrin gendert nicht).
+    Betroffene Stellen: Tipp-Text in Gespräch- und Intention-Wizard,
+    Planung-Subheadline, Planung-Placeholder.
+  Frühere Versionen siehe v6-Block.
+  ═══════════════════════════════════════════════════════════════
+-->
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gesprächs-Kompass · CMKB</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal-dark:  #0B3948;
+  --teal-mid:   #5da7b2;
+  --teal-light: #c8e6ea;
+  --gold:       #9f8252;
+  --gold-light: #f0e6d6;
+  --flora:      #fffcf2;
+  --greige-d:   #8e897a;
+  --greige-l:   #dbd8ca;
+  --white:      #ffffff;
+  --sand:       #f5f0e8;
+  --evid-bg:    #e6f2e6;
+  --evid-fg:    #2d5a2d;
+  --text:       #1a1a1a;
+  --red-bg:     #fde8e8;
+  --red-fg:     #c0544a;
+  --yellow-bg:  #fef3cd;
+  --yellow-fg:  #856404;
+  --purple-bg:  #ede7f6;
+  --purple-fg:  #512da8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--flora); color: var(--text); min-height: 100vh; }
+
+/* ── LOGIN ── */
+#login-screen { position: fixed; inset: 0; background: var(--teal-dark); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 24px; }
+#login-screen.hidden { display: none; }
+.login-box { background: var(--white); border-radius: 20px; padding: 36px 28px; max-width: 360px; width: 100%; box-shadow: 0 24px 80px rgba(0,0,0,.3); }
+.login-logo { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--teal-dark); margin-bottom: 4px; }
+.login-sub { font-size: 11px; color: var(--greige-d); margin-bottom: 28px; }
+.login-box label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--teal-dark); margin-bottom: 8px; }
+.login-input { width: 100%; padding: 12px 14px; border: 1.5px solid var(--greige-l); border-radius: 10px; font-family: 'DM Mono', monospace; font-size: 14px; color: var(--teal-dark); background: var(--flora); outline: none; margin-bottom: 16px; letter-spacing: .1em; transition: border-color .2s; }
+.login-input:focus { border-color: var(--teal-mid); }
+.login-btn { width: 100%; background: var(--teal-dark); color: var(--white); border: none; padding: 14px; border-radius: 10px; font-size: 13px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: background .2s; }
+.login-btn:hover { background: var(--teal-mid); }
+.login-error { font-size: 11px; color: var(--red-fg); margin-top: 10px; text-align: center; min-height: 16px; }
+.login-hint { font-size: 10px; color: var(--greige-d); text-align: center; margin-top: 16px; line-height: 1.6; font-style: italic; }
+
+/* ── HEADER ── */
+.app-header { background: var(--teal-dark); padding: 18px 20px 14px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 20px rgba(11,57,72,.3); }
+.app-header h1 { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--white); }
+.app-header .sub { font-size: 10px; color: var(--teal-light); margin-top: 2px; font-weight: 300; }
+.hbadge { background: var(--gold); color: var(--white); font-size: 10px; font-weight: 600; padding: 4px 10px; border-radius: 20px; font-family: 'DM Mono', monospace; }
+
+/* ── TABS ── */
+.tabs { background: var(--teal-dark); display: flex; border-top: 1px solid rgba(255,255,255,.1); overflow-x: auto; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { flex: 1; min-width: 72px; padding: 10px 6px; text-align: center; font-size: 11px; font-weight: 600; color: rgba(255,255,255,.75); cursor: pointer; transition: all .2s; border-bottom: 2px solid transparent; text-transform: uppercase; letter-spacing: .06em; white-space: nowrap; }
+.tab:hover { color: var(--white); }
+.tab.active { color: var(--white); border-bottom-color: var(--gold); }
+
+/* ── CONTENT ── */
+.content { padding: 18px 16px 100px; max-width: 680px; margin: 0 auto; }
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ── CARDS ── */
+.card { background: var(--white); border-radius: 14px; margin-bottom: 14px; overflow: hidden; box-shadow: 0 2px 12px rgba(11,57,72,.06); }
+.card-header { padding: 13px 16px; display: flex; align-items: center; gap: 10px; }
+.card-header.teal { background: var(--teal-dark); }
+.card-header.gold { background: var(--gold); }
+.card-header.mid { background: var(--teal-mid); }
+.card-header.purple { background: var(--purple-fg); }
+.card-header .icon { font-size: 16px; }
+.card-header .title { font-size: 12px; font-weight: 600; color: var(--white); text-transform: uppercase; letter-spacing: .05em; }
+.card-header .hint { font-size: 10px; color: rgba(255,255,255,.7); margin-top: 1px; }
+.card-body { padding: 16px; }
+
+/* ── OPTIONEN ── */
+.option-card { background: var(--white); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(11,57,72,.06); border-left: 4px solid var(--greige-l); cursor: pointer; transition: all .2s; }
+.option-card.selected { border-left-color: var(--teal-dark); background: var(--teal-light); }
+.option-card:hover { box-shadow: 0 4px 16px rgba(11,57,72,.1); }
+.option-num { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--greige-d); margin-bottom: 3px; }
+.option-title { font-size: 14px; font-weight: 600; color: var(--teal-dark); }
+.option-desc { font-size: 11px; color: var(--greige-d); margin-top: 4px; line-height: 1.5; }
+.option-score { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.score-badge { font-size: 11px; font-weight: 700; font-family: 'DM Mono', monospace; padding: 3px 10px; border-radius: 20px; }
+.score-0 { background: var(--greige-l); color: var(--greige-d); }
+.score-low { background: var(--red-bg); color: var(--red-fg); }
+.score-mid { background: var(--yellow-bg); color: var(--yellow-fg); }
+.score-high { background: var(--evid-bg); color: var(--evid-fg); }
+
+/* ── GESPRÄCH ITEM ── */
+.gespraech-item { background: var(--flora); border: 1.5px solid var(--greige-l); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; transition: all .2s; }
+.gespraech-item:hover { border-color: var(--teal-mid); box-shadow: 0 4px 12px rgba(11,57,72,.08); }
+.gi-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 6px; }
+.gi-person { font-size: 13px; font-weight: 600; color: var(--teal-dark); }
+.gi-option { font-size: 10px; color: var(--gold); font-weight: 600; background: var(--gold-light); padding: 2px 8px; border-radius: 10px; }
+.gi-date { font-size: 10px; color: var(--greige-d); font-family: 'DM Mono', monospace; }
+.gi-bars { display: flex; height: 6px; border-radius: 3px; overflow: hidden; margin-top: 8px; gap: 2px; }
+.gi-bar { height: 100%; border-radius: 3px; }
+
+/* ── FELDER ── */
+.field-label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--teal-dark); margin-bottom: 6px; }
+.field-sub { font-size: 12px; color: #3a3735; margin-bottom: 10px; line-height: 1.55; }
+textarea, input[type=text], select { width: 100%; padding: 10px 12px; border: 1.5px solid var(--greige-l); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--text); background: var(--flora); outline: none; transition: border-color .2s; line-height: 1.6; }
+textarea { resize: vertical; min-height: 72px; }
+textarea:focus, input[type=text]:focus, select:focus { border-color: var(--teal-mid); }
+.field-wrap { margin-bottom: 14px; }
+.field-wrap:last-child { margin-bottom: 0; }
+
+/* ── SKALA ── */
+.skala-wrap { margin-bottom: 14px; }
+.skala-row { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+.skala-row input[type=range] { flex: 1; height: 6px; -webkit-appearance: none; border-radius: 3px; outline: none; cursor: pointer; padding: 0; background: linear-gradient(to right, var(--teal-light), var(--teal-dark)); }
+.skala-row input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--teal-dark); border: 2px solid var(--white); box-shadow: 0 2px 6px rgba(11,57,72,.3); cursor: pointer; }
+.skala-val { min-width: 32px; text-align: right; font-family: 'DM Mono', monospace; font-size: 16px; font-weight: 700; color: var(--teal-dark); }
+.skala-labels { display: flex; justify-content: space-between; font-size: 9px; color: var(--greige-d); margin-top: 4px; }
+
+/* ── CHIPS ── */
+.chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.chip { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 500; cursor: pointer; border: 1.5px solid var(--greige-l); background: var(--flora); color: var(--greige-d); transition: all .15s; user-select: none; }
+.chip.selected { background: var(--teal-dark); color: var(--white); border-color: var(--teal-dark); }
+.chip:hover:not(.selected) { border-color: var(--teal-mid); color: var(--teal-dark); }
+
+/* ── SAVE BTN ── */
+.save-btn { width: 100%; background: var(--teal-dark); color: var(--white); border: none; padding: 15px; border-radius: 12px; font-size: 14px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 4px; }
+.save-btn:hover { background: var(--teal-mid); }
+.save-btn.saved { background: #2d6a2d; }
+.add-btn { width: 100%; padding: 11px; border: 1.5px dashed var(--greige-l); border-radius: 10px; background: var(--flora); color: var(--greige-d); font-family: 'DM Sans', sans-serif; font-size: 12px; cursor: pointer; transition: all .15s; margin-top: 4px; }
+.add-btn:hover { border-color: var(--teal-mid); color: var(--teal-dark); }
+
+/* ── GESAMTBILD ── */
+.gesamtbild-card { background: var(--white); border-radius: 14px; margin-bottom: 14px; overflow: hidden; box-shadow: 0 2px 12px rgba(11,57,72,.06); }
+.gb-option-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--greige-l); }
+.gb-option-row:last-child { border-bottom: none; }
+.gb-num { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--greige-d); min-width: 20px; }
+.gb-name { flex: 1; font-size: 13px; font-weight: 600; color: var(--teal-dark); }
+.gb-score-bar { width: 80px; height: 8px; border-radius: 4px; background: var(--greige-l); overflow: hidden; }
+.gb-score-fill { height: 100%; border-radius: 4px; background: var(--teal-mid); transition: width .4s; }
+.gb-score-num { font-size: 12px; font-weight: 700; font-family: 'DM Mono', monospace; color: var(--teal-dark); min-width: 28px; text-align: right; }
+.gb-gespräche { font-size: 10px; color: var(--greige-d); min-width: 40px; text-align: right; }
+
+/* ── LINK DIALOG ── */
+#link-dialog { position: fixed; inset: 0; background: rgba(11,57,72,.5); display: none; align-items: center; justify-content: center; z-index: 999; padding: 20px; }
+#link-dialog.vis { display: flex; }
+.link-box { background: var(--white); border-radius: 16px; padding: 24px; max-width: 400px; width: 100%; box-shadow: 0 20px 60px rgba(11,57,72,.3); }
+.link-box h3 { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--teal-dark); margin-bottom: 8px; }
+.link-box p { font-size: 12px; color: var(--greige-d); line-height: 1.6; margin-bottom: 14px; }
+#link-output { width: 100%; padding: 10px 12px; border: 1.5px solid var(--teal-light); border-radius: 8px; font-size: 10px; font-family: 'DM Mono', monospace; color: var(--teal-dark); background: var(--teal-light); margin-bottom: 12px; word-break: break-all; }
+.link-btns { display: flex; gap: 8px; }
+.link-btns button { flex: 1; padding: 10px; border: none; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; }
+.btn-copy { background: var(--teal-dark); color: var(--white); }
+.btn-close-d { background: var(--greige-l); color: var(--greige-d); }
+
+/* ── MODAL ── */
+#modal { position: fixed; inset: 0; background: rgba(11,57,72,.5); display: none; align-items: flex-start; justify-content: center; z-index: 998; padding: 20px; overflow-y: auto; }
+#modal.vis { display: flex; }
+.modal-box { background: var(--white); border-radius: 16px; padding: 0; max-width: 560px; width: 100%; box-shadow: 0 20px 60px rgba(11,57,72,.3); margin: auto; overflow: hidden; }
+.modal-header { background: var(--teal-dark); padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; }
+.modal-title { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--white); }
+.modal-close { background: none; border: none; color: var(--teal-light); font-size: 20px; cursor: pointer; padding: 4px 8px; border-radius: 6px; }
+.modal-close:hover { background: rgba(255,255,255,.1); }
+.modal-body { padding: 20px; max-height: 70vh; overflow-y: auto; }
+
+/* ── FAB ── */
+.fab-row { position: fixed; bottom: 20px; right: 16px; display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+.fab { background: var(--teal-dark); color: var(--white); border: none; border-radius: 28px; padding: 11px 16px; font-size: 11px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; box-shadow: 0 4px 16px rgba(11,57,72,.3); transition: all .2s; display: flex; align-items: center; gap: 6px; }
+.fab:hover { background: var(--teal-mid); }
+.fab.gold { background: var(--gold); }
+
+/* ── EVID ── */
+.evid-bar { background: var(--evid-bg); border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; font-size: 11px; color: var(--evid-fg); font-style: italic; line-height: 1.6; }
+
+/* ── TOAST ── */
+#toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--teal-dark); color: var(--white); padding: 10px 20px; border-radius: 20px; font-size: 12px; font-weight: 500; opacity: 0; pointer-events: none; transition: all .3s; z-index: 998; white-space: nowrap; }
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ════════════════════════════════════════════════════════════
+   GESPRÄCHE-TEASER (Landing-Page-Stil für leeren Zustand)
+   ════════════════════════════════════════════════════════════ */
+.gesp-teaser { padding: 8px 0 40px; }
+.gesp-teaser-hero { background: linear-gradient(135deg, var(--teal-dark) 0%, #0d4a5e 100%); color: var(--white); padding: 32px 28px; border-radius: 18px; margin-bottom: 24px; position: relative; overflow: hidden; }
+.gesp-teaser-hero::before { content: ''; position: absolute; top: -30px; right: -30px; width: 160px; height: 160px; background: rgba(159,130,82,.15); border-radius: 50%; }
+.gesp-teaser-hero::after { content: ''; position: absolute; bottom: -40px; left: -40px; width: 120px; height: 120px; background: rgba(93,167,178,.12); border-radius: 50%; }
+.gesp-teaser-eyebrow { font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; color: var(--gold); margin-bottom: 14px; position: relative; z-index: 1; }
+.gesp-teaser-title { font-family: 'DM Serif Display', serif; font-size: 32px; color: var(--white); line-height: 1.15; margin-bottom: 14px; position: relative; z-index: 1; }
+.gesp-teaser-lead { font-size: 16px; line-height: 1.6; color: var(--teal-light); max-width: 580px; position: relative; z-index: 1; }
+
+.gesp-teaser-grid { display: flex; flex-direction: column; gap: 16px; margin-bottom: 28px; }
+.gesp-teaser-card { background: var(--white); border-radius: 16px; padding: 26px 24px; border: 1.5px solid var(--greige-l); border-left: 5px solid var(--gold); box-shadow: 0 2px 14px rgba(11,57,72,.06); transition: all .2s; }
+.gesp-teaser-card:hover { border-left-color: var(--teal-dark); box-shadow: 0 8px 28px rgba(11,57,72,.12); transform: translateY(-2px); }
+.gesp-teaser-num { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 700; color: var(--gold); letter-spacing: .1em; margin-bottom: 10px; }
+.gesp-teaser-headline { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--teal-dark); line-height: 1.25; margin-bottom: 10px; }
+.gesp-teaser-body { font-size: 15px; line-height: 1.7; color: #1a1a1a; }
+
+.gesp-teaser-cta { display: block; width: 100%; background: var(--teal-dark); color: var(--white); border: none; padding: 20px 28px; border-radius: 14px; font-family: 'DM Sans', sans-serif; font-size: 17px; font-weight: 600; cursor: pointer; transition: all .2s; box-shadow: 0 6px 20px rgba(11,57,72,.25); margin-bottom: 14px; }
+.gesp-teaser-cta:hover { background: var(--teal-mid); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(11,57,72,.32); }
+.gesp-teaser-foot { font-size: 13px; line-height: 1.7; color: #3a3735; text-align: center; padding: 0 8px; }
+.gesp-teaser-foot strong { color: var(--teal-dark); font-weight: 700; }
+
+
+.int-modal-container { position: fixed; inset: 0; background: rgba(81,45,168,.35); display: none; align-items: flex-start; justify-content: center; z-index: 998; padding: 20px; overflow-y: auto; }
+.int-modal-container.vis { display: flex; }
+
+/* ════════════════════════════════════════════════════════════
+   WIZARD (Gespräch dokumentieren — Schritt-für-Schritt)
+   ════════════════════════════════════════════════════════════ */
+.wiz-stepper { display: flex; align-items: center; gap: 8px; padding: 16px 20px; background: var(--flora); border-bottom: 1px solid var(--greige-l); }
+.wiz-step-indicator { flex: 1; height: 4px; border-radius: 2px; background: var(--greige-l); transition: background .25s; cursor: pointer; }
+.wiz-step-indicator.done { background: var(--teal-mid); }
+.wiz-step-indicator.active { background: var(--teal-dark); }
+.wiz-step-meta { padding: 14px 20px 4px; display: flex; justify-content: space-between; align-items: baseline; }
+.wiz-step-num { font-size: 10px; font-family: 'DM Mono', monospace; font-weight: 700; color: var(--greige-d); text-transform: uppercase; letter-spacing: .08em; }
+.wiz-step-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--teal-dark); margin: 0 20px 6px; }
+.wiz-step-sub { font-size: 15px; color: #2d2a27; margin: 0 20px 18px; line-height: 1.55; font-weight: 500; }
+.wiz-step { display: none; }
+.wiz-step.active { display: block; }
+.wiz-nav { display: flex; gap: 10px; padding: 16px 20px 20px; border-top: 1px solid var(--greige-l); background: var(--flora); position: sticky; bottom: 0; }
+.wiz-back, .wiz-next, .wiz-save { padding: 13px 20px; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all .2s; }
+.wiz-back { background: var(--white); color: var(--teal-dark); border: 1.5px solid var(--greige-l); flex: 1; }
+.wiz-back:hover { border-color: var(--teal-mid); }
+.wiz-back:disabled { opacity: .35; cursor: not-allowed; }
+.wiz-next { background: var(--teal-dark); color: var(--white); flex: 2; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 14px rgba(11,57,72,.25); }
+.wiz-next:hover { background: var(--teal-mid); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(11,57,72,.35); }
+.wiz-save { background: var(--gold); color: var(--white); flex: 2; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 14px rgba(159,130,82,.35); }
+.wiz-save:hover { background: #b89766; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(159,130,82,.45); }
+
+/* ── Akzentfarben pro Wizard-Schritt ──
+   Jeder Schritt hat eine eigene Farbe, die Stepper, Titel,
+   Field-Labels und den Weiter-Button einfärbt.
+   Schritte 2-4 sind alle "Intention" → alle lila. */
+.modal-box[data-step="1"] { --accent: var(--teal-dark);  --accent-soft: var(--teal-light); }
+.modal-box[data-step="2"] { --accent: var(--purple-fg);  --accent-soft: var(--purple-bg); }
+.modal-box[data-step="3"] { --accent: var(--purple-fg);  --accent-soft: var(--purple-bg); }
+.modal-box[data-step="4"] { --accent: var(--purple-fg);  --accent-soft: var(--purple-bg); }
+.modal-box[data-step="5"] { --accent: var(--teal-mid);   --accent-soft: var(--teal-light); }
+.modal-box[data-step="6"] { --accent: var(--gold);       --accent-soft: var(--gold-light); }
+.modal-box[data-step="7"] { --accent: var(--evid-fg);    --accent-soft: var(--evid-bg); }
+
+.modal-box[data-step] .wiz-step-indicator.active { background: var(--accent); height: 5px; }
+.modal-box[data-step] .wiz-step-indicator.done   { background: var(--accent); opacity: .55; }
+.modal-box[data-step] .wiz-step-title { color: var(--accent); }
+/* Field-Labels bewusst NICHT in Akzentfarbe (Kontrast-Gründe — teal-mid und gold
+   liegen unter WCAG AA). Labels bleiben durchgängig teal-dark = 12:1 Kontrast. */
+.modal-box[data-step] .wiz-next { background: var(--accent); box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 35%, transparent); }
+.modal-box[data-step] .wiz-next:hover { filter: brightness(1.15); }
+
+/* ── Eingabefelder mit mehr Kontrast ──
+   Weißer Hintergrund statt cream, klarere Borders. */
+.modal-box textarea,
+.modal-box input[type=text],
+.modal-box select {
+  background: var(--white);
+  border-color: var(--greige-l);
+  box-shadow: 0 1px 2px rgba(11,57,72,.04);
+}
+.modal-box .wiz-step.active textarea:focus,
+.modal-box .wiz-step.active input[type=text]:focus,
+.modal-box .wiz-step.active select:focus {
+  border-color: var(--accent, var(--teal-mid));
+  box-shadow: 0 0 0 3px var(--accent-soft, var(--teal-light));
+}
+
+/* ════════════════════════════════════════════════════════════
+   DESKTOP-OPTIMIERUNG (ab 900px)
+   Überschreibt Mobile-Größen für komfortable Desktop-Nutzung.
+   Mobile-Layout bleibt unter 900px unverändert.
+   ════════════════════════════════════════════════════════════ */
+@media (min-width: 900px) {
+
+  /* Inline-Style-Overrides: Da viele Bereiche (Start, Optionen, Planung)
+     mit hardgecodeten font-size:XXpx inline gestylt sind, heben wir alle
+     gängigen Pixel-Werte pauschal an. WCAG-konforme Schriftgrößen. */
+  [style*="font-size:9px"]  { font-size: 14px !important; }
+  [style*="font-size:10px"] { font-size: 15px !important; }
+  [style*="font-size:11px"] { font-size: 17px !important; }
+  [style*="font-size:12px"] { font-size: 18px !important; }
+  [style*="font-size:13px"] { font-size: 19px !important; }
+  [style*="font-size:14px"] { font-size: 20px !important; }
+  [style*="font-size:15px"] { font-size: 21px !important; }
+  [style*="font-size:16px"] { font-size: 22px !important; }
+  [style*="font-size:18px"] { font-size: 26px !important; }
+  [style*="font-size:22px"] { font-size: 32px !important; }
+  [style*="font-size:26px"] { font-size: 44px !important; }
+  [style*="font-size:32px"] { font-size: 54px !important; }
+
+  /* Farb-Overrides für blasse Inline-Farben (WCAG AA Kontrast) */
+  [style*="color:var(--greige-d)"] { color: #3a3735 !important; }
+  [style*="color:var(--teal-mid)"]:not(.tab) { color: var(--teal-dark) !important; }
+  [style*="color:var(--gold)"]:not(.fab):not(button) { color: #6b542b !important; }
+
+  /* Padding leicht anheben für Container, die Inline-Styles nutzen */
+  [style*="padding:14px"] { padding: 22px !important; }
+  [style*="padding:20px"] { padding: 32px !important; }
+  [style*="padding:28px 20px 20px"] { padding: 44px 36px 32px !important; }
+
+  /* Login */
+  .login-box { max-width: 460px; padding: 48px 40px; border-radius: 24px; }
+  .login-logo { font-size: 30px; margin-bottom: 6px; }
+  .login-sub { font-size: 14px; margin-bottom: 36px; }
+  .login-box label { font-size: 13px; margin-bottom: 10px; }
+  .login-input { padding: 16px 18px; font-size: 17px; border-radius: 12px; margin-bottom: 20px; }
+  .login-btn { padding: 17px; font-size: 16px; border-radius: 12px; }
+  .login-error { font-size: 14px; margin-top: 14px; min-height: 20px; }
+  .login-hint { font-size: 13px; margin-top: 20px; }
+
+  /* Header */
+  .app-header { padding: 24px 40px 20px; }
+  .app-header h1 { font-size: 26px; }
+  .app-header .sub { font-size: 13px; margin-top: 4px; }
+  .hbadge { font-size: 12px; padding: 6px 14px; }
+
+  /* Tabs */
+  .tab { padding: 16px 18px; font-size: 13px; min-width: auto; flex: 0 1 auto; }
+  .tabs { padding: 0 32px; }
+
+  /* Content */
+  .content { padding: 36px 40px 120px; max-width: 1080px; }
+
+  /* Cards */
+  .card { border-radius: 18px; margin-bottom: 22px; }
+  .card-header { padding: 18px 24px; gap: 14px; }
+  .card-header .icon { font-size: 22px; }
+  .card-header .title { font-size: 15px; }
+  .card-header .hint { font-size: 13px; margin-top: 3px; }
+  .card-body { padding: 28px; }
+
+  /* Optionen */
+  .option-card { padding: 20px 24px; margin-bottom: 14px; border-radius: 14px; border-left-width: 5px; }
+  .option-num { font-size: 12px; margin-bottom: 5px; }
+  .option-title { font-size: 17px; }
+  .option-desc { font-size: 14px; margin-top: 6px; line-height: 1.6; }
+  .option-score { gap: 12px; margin-top: 12px; }
+  .score-badge { font-size: 13px; padding: 5px 14px; }
+
+  /* Gespräch Item */
+  .gespraech-item { padding: 20px 24px; margin-bottom: 14px; border-radius: 14px; }
+  .gi-person { font-size: 16px; }
+  .gi-option { font-size: 12px; padding: 4px 12px; border-radius: 12px; }
+  .gi-date { font-size: 12px; }
+  .gi-bars { height: 8px; margin-top: 12px; }
+
+  /* Felder & Inputs — die wichtigste Änderung für komfortables Tippen */
+  .field-label { font-size: 17px; margin-bottom: 10px; letter-spacing: .08em; font-weight: 700; }
+  .field-sub { font-size: 17px; margin-bottom: 14px; line-height: 1.65; color: #1a1a1a; font-weight: 500; }
+  textarea, input[type=text], select {
+    padding: 18px 20px;
+    font-size: 18px;
+    border-radius: 12px;
+    line-height: 1.7;
+  }
+  textarea { min-height: 150px; }
+  .field-wrap { margin-bottom: 28px; }
+
+  /* Skala */
+  .skala-wrap { margin-bottom: 22px; }
+  .skala-row { gap: 18px; margin-top: 12px; }
+  .skala-row input[type=range] { height: 8px; }
+  .skala-row input[type=range]::-webkit-slider-thumb { width: 28px; height: 28px; }
+  .skala-val { min-width: 44px; font-size: 22px; }
+  .skala-labels { font-size: 12px; margin-top: 6px; }
+
+  /* Chips */
+  .chip-row { gap: 10px; margin-bottom: 12px; }
+  .chip { padding: 9px 18px; font-size: 14px; border-radius: 24px; }
+
+  /* Buttons */
+  .save-btn { padding: 18px; font-size: 16px; border-radius: 14px; gap: 10px; margin-top: 8px; }
+  .add-btn { padding: 15px; font-size: 14px; border-radius: 12px; margin-top: 8px; }
+
+  /* Gesamtbild */
+  .gesamtbild-card { border-radius: 18px; margin-bottom: 22px; }
+  .gb-option-row { gap: 16px; padding: 18px 24px; }
+  .gb-num { font-size: 12px; min-width: 28px; }
+  .gb-name { font-size: 16px; }
+  .gb-score-bar { width: 140px; height: 10px; }
+  .gb-score-num { font-size: 15px; min-width: 36px; }
+  .gb-gespräche { font-size: 13px; min-width: 56px; }
+
+  /* Link-Dialog */
+  .link-box { padding: 36px; max-width: 520px; border-radius: 20px; }
+  .link-box h3 { font-size: 24px; margin-bottom: 12px; }
+  .link-box p { font-size: 14px; margin-bottom: 18px; line-height: 1.7; }
+  #link-output { padding: 14px 16px; font-size: 12px; margin-bottom: 16px; border-radius: 10px; }
+  .link-btns { gap: 12px; }
+  .link-btns button { padding: 14px; font-size: 14px; border-radius: 10px; }
+
+  /* Modal */
+  .modal-box { max-width: 760px; border-radius: 20px; }
+  .modal-header { padding: 22px 28px; }
+  .modal-title { font-size: 24px; }
+  .modal-close { font-size: 26px; padding: 6px 12px; }
+  .modal-body { padding: 32px; max-height: 75vh; }
+
+  /* Wizard auf Desktop */
+  .wiz-stepper { padding: 22px 32px; gap: 12px; }
+  .wiz-step-indicator { height: 5px; border-radius: 3px; }
+  .wiz-step-meta { padding: 20px 32px 6px; }
+  .wiz-step-num { font-size: 13px; }
+  .wiz-step-title { font-size: 28px; margin: 0 32px 8px; }
+  .wiz-step-sub { font-size: 18px; margin: 0 32px 26px; line-height: 1.6; color: #1a1a1a; }
+  .wiz-nav { padding: 22px 32px 28px; gap: 14px; }
+  .wiz-back, .wiz-next, .wiz-save { padding: 16px 26px; font-size: 15px; border-radius: 14px; }
+
+  /* FAB */
+  .fab-row { bottom: 32px; right: 32px; gap: 12px; }
+  .fab { padding: 14px 22px; font-size: 14px; border-radius: 32px; gap: 8px; }
+
+  /* Evidence-Bar */
+  .evid-bar { padding: 14px 20px; font-size: 14px; margin-bottom: 22px; border-radius: 12px; line-height: 1.7; }
+
+  /* Toast */
+  #toast { bottom: 100px; padding: 14px 28px; font-size: 14px; border-radius: 26px; }
+
+  /* Gespräche-Teaser auf Desktop */
+  .gesp-teaser { padding: 16px 0 60px; }
+  .gesp-teaser-hero { padding: 56px 52px 52px; border-radius: 22px; margin-bottom: 36px; }
+  .gesp-teaser-hero::before { width: 240px; height: 240px; top: -60px; right: -60px; }
+  .gesp-teaser-hero::after  { width: 200px; height: 200px; bottom: -60px; left: -60px; }
+  .gesp-teaser-eyebrow { font-size: 14px; margin-bottom: 18px; }
+  .gesp-teaser-title   { font-size: 48px; margin-bottom: 18px; line-height: 1.12; max-width: 720px; }
+  .gesp-teaser-lead    { font-size: 20px; line-height: 1.65; max-width: 700px; }
+  .gesp-teaser-grid    { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; margin-bottom: 40px; }
+  .gesp-teaser-card    { padding: 32px 28px; border-radius: 18px; border-left-width: 6px; }
+  .gesp-teaser-num     { font-size: 16px; margin-bottom: 16px; }
+  .gesp-teaser-headline{ font-size: 24px; margin-bottom: 14px; line-height: 1.22; }
+  .gesp-teaser-body    { font-size: 16px; line-height: 1.75; }
+  .gesp-teaser-cta     { display: block; width: auto; max-width: 480px; margin: 0 auto 22px; padding: 22px 36px; font-size: 18px; border-radius: 16px; }
+  .gesp-teaser-foot    { font-size: 15px; max-width: 700px; margin: 0 auto; line-height: 1.75; }
+}
+
+/* Extra-Komfort für sehr große Bildschirme */
+@media (min-width: 1400px) {
+  .content { max-width: 1200px; padding: 44px 56px 140px; }
+  .app-header { padding: 28px 56px 22px; }
+  .tabs { padding: 0 48px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">Gesprächs-Kompass</div>
+    <div class="login-sub">Change Maker Karriere Beratung · Kathrin Heinrich</div>
+    <label>Dein persönliches Passwort</label>
+    <input class="login-input" type="password" id="login-pw"
+      placeholder="Dein persönliches Passwort"
+      onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Kompass öffnen →</button>
+    <div class="login-error" id="login-error"></div>
+    <div class="login-hint">Dein Passwort hast du von Kathrin erhalten.<br>Bei Fragen: info@kathrinheinrich.de</div>
+  </div>
+</div>
+
+<!-- ── HEADER ── -->
+<header class="app-header">
+  <div>
+    <h1>Gesprächs-Kompass</h1>
+    <div class="sub">Change Maker Karriere Beratung · Kathrin Heinrich</div>
+  </div>
+  <div class="hbadge" id="count-badge">0 Gespräche</div>
+</header>
+
+<nav class="tabs">
+  <div class="tab active" onclick="showTab('start')">Start</div>
+  <div class="tab" onclick="showTab('optionen')">Optionen</div>
+  <div class="tab" onclick="showTab('planung')">Planung</div>
+  <div class="tab" onclick="showTab('gespraeche')">Gespräche</div>
+  <div class="tab" onclick="showTab('gesamtbild')">Gesamtbild</div>
+</nav>
+<div id="warn-banner" style="display:none;background:#fde8e8;border-left:4px solid #c0544a;padding:12px 16px;align-items:flex-start;gap:10px;font-size:11px;color:#c0544a;line-height:1.7;">
+  <span style="font-size:18px;flex-shrink:0;">&#9888;&#65039;</span>
+  <span><strong>Achtung:</strong> Wenn du keinen Link erstellst, sind deine Daten weg.<br>
+  Klicke nach deinen Einträgen auf <strong>&#128279; Link zum Speichern deiner Daten erstellen</strong> — speichere ihn als Lesezeichen oder schick ihn dir per E-Mail. Nur so sind deine Daten gesichert.</span>
+</div>
+
+
+
+
+<div class="content">
+
+  <!-- ═══ START ═══ -->
+  <div class="screen active" id="screen-start">
+    <div class="card">
+      <div style="background:var(--teal-dark);padding:28px 20px 20px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;background:rgba(93,167,178,.15);border-radius:50%;"></div>
+        <h2 style="font-family:'DM Serif Display',serif;font-size:26px;color:var(--white);line-height:1.25;position:relative;z-index:1;">Klarheit entsteht<br>im Gespräch.</h2>
+        <div style="font-size:12px;color:var(--teal-light);margin-top:6px;position:relative;z-index:1;">Sensing Phase · Design Thinking · Change Maker Karriere Beratung · Kathrin Heinrich</div>
+      </div>
+      <div style="padding:20px;">
+        <p style="font-size:13px;line-height:1.8;color:var(--text);margin-bottom:12px;">Du stehst vor einer wichtigen Entscheidung. Bevor du entscheidest — sprich. Mit Menschen die dein System kennen. Mit Menschen die außerhalb stehen. Mit dir selbst nach jedem Gespräch.</p>
+        <p style="font-size:13px;line-height:1.8;color:var(--text);">Dieser Kompass hilft dir jeden Schritt dieses Sensing-Prozesses zu strukturieren — von der Gesprächsvorbereitung bis zum Gesamtbild das sich über die Zeit verdichtet.</p>
+      </div>
+    </div>
+
+    <div class="evid-bar">📚 Evidenz: Strukturiertes Sensing vor komplexen Karriereentscheidungen erhöht Entscheidungsqualität und Zufriedenheit signifikant. Wer mehrere Perspektiven systematisch einholt reduziert kognitive Verzerrungen um bis zu 40%. (Kahneman 2011 · Klein 2007)</div>
+
+    <!-- ═══ INTENTION-ÜBUNG (Dashboard-Shortcut) ═══ -->
+    <div class="card" style="background:linear-gradient(135deg,var(--purple-bg) 0%,#f5edff 100%);border:2px solid var(--purple-fg);cursor:pointer;transition:all .2s;" onclick="openIntentionUebung()" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 32px rgba(81,45,168,.18)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+      <div style="padding:24px 22px;display:flex;align-items:center;gap:18px;">
+        <div style="width:56px;height:56px;border-radius:50%;background:var(--purple-fg);color:white;font-size:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 14px rgba(81,45,168,.3);">🎯</div>
+        <div style="flex:1;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--purple-fg);margin-bottom:4px;font-family:'DM Mono',monospace;">2-Minuten-Übung · Vor jedem wichtigen Gespräch</div>
+          <div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--purple-fg);line-height:1.2;margin-bottom:6px;">Klare Intention bilden</div>
+          <div style="font-size:13px;color:var(--purple-fg);line-height:1.6;opacity:.85;">Wer mit klarer Intention in ein Gespräch geht, hört anders zu — und bekommt andere Antworten.</div>
+        </div>
+        <div style="font-size:20px;color:var(--purple-fg);flex-shrink:0;">→</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header teal">
+        <span class="icon">🧭</span>
+        <div>
+          <div class="title">Wie du vorgehst</div>
+          <div class="hint">Drei Schritte · ein klares Bild</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--teal-dark);color:white;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
+            <div><div style="font-size:13px;font-weight:600;color:var(--teal-dark);">Optionen anlegen</div><div style="font-size:11px;color:var(--greige-d);margin-top:2px;line-height:1.5;">Trage alle Optionen ein die zur Wahl stehen — so klar und konkret wie möglich.</div></div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--gold);color:white;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
+            <div><div style="font-size:13px;font-weight:600;color:var(--teal-dark);">Gespräche führen & dokumentieren</div><div style="font-size:11px;color:var(--greige-d);margin-top:2px;line-height:1.5;">Bereite jedes Gespräch vor · dokumentiere danach · halte dein Empfinden fest.</div></div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--teal-mid);color:white;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+            <div><div style="font-size:13px;font-weight:600;color:var(--teal-dark);">Gesamtbild lesen</div><div style="font-size:11px;color:var(--greige-d);margin-top:2px;line-height:1.5;">Nach mehreren Gesprächen verdichtet sich das Bild — welche Option zieht dich an?</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="save-btn" onclick="showTab('optionen')">Optionen anlegen →</button>
+  </div>
+
+  <!-- ═══ OPTIONEN ═══ -->
+  <div class="screen" id="screen-optionen">
+    <div class="evid-bar">📚 Evidenz: Das explizite Benennen und Strukturieren von Optionen vor Gesprächen schärft die Wahrnehmung und reduziert Confirmation Bias. (Heath & Heath 2013)</div>
+
+    <div id="optionen-list"></div>
+
+    <div class="card">
+      <div class="card-header gold">
+        <span class="icon">➕</span>
+        <div><div class="title">Neue Option anlegen</div></div>
+      </div>
+      <div class="card-body">
+        <div class="field-wrap">
+          <div class="field-label">Name der Option</div>
+          <div class="field-sub">Kurz und prägnant — wie du sie intern nennst</div>
+          <input type="text" id="opt-name" placeholder="z.B. Senior Director beim neuen Eigentümer · Head of Strategy extern · Interim-Rolle">
+        </div>
+        <div class="field-wrap">
+          <div class="field-label">Beschreibung</div>
+          <div class="field-sub">Was beinhaltet diese Option konkret?</div>
+          <textarea id="opt-desc" placeholder="z.B. Senior Director Strategie · gleiches Level wie bisher · neues Reporting an CCO · Team von 8 Personen · Standort München bleibt..."></textarea>
+        </div>
+        <div class="field-wrap">
+          <div class="field-label">Was zieht mich an dieser Option an?</div>
+          <textarea id="opt-pro" placeholder="z.B. Bekanntes Umfeld · ich kenne das Produkt · kurze Einarbeitungszeit · gutes Gehalt gesichert..." style="min-height:56px;"></textarea>
+        </div>
+        <div class="field-wrap">
+          <div class="field-label">Was gibt mir zu denken?</div>
+          <textarea id="opt-con" placeholder="z.B. Neue Eigentümerstruktur unklar · wer hat wirklich das Sagen? · Kulturwandel absehbar · bin ich da noch richtig?" style="min-height:56px;"></textarea>
+        </div>
+        <button class="save-btn" onclick="saveOption()">Option speichern</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PLANUNG ═══ -->
+  <div class="screen" id="screen-planung">
+    <div class="evid-bar">📚 Evidenz: Wer Gespräche im Voraus plant und priorisiert erhöht die Diversität der Perspektiven und vermeidet Bestätigungsfehler. (Heath & Heath 2013)</div>
+
+    <div class="card">
+      <div class="card-header teal">
+        <span class="icon">📋</span>
+        <div><div class="title">Gesprächsplanung — Übersicht</div><div class="hint">Wer · wann · Status</div></div>
+      </div>
+      <div class="card-body">
+        <div id="planung-list"></div>
+        <div id="planung-empty" style="text-align:center;padding:20px;color:var(--greige-d);font-size:12px;">Noch keine Gespräche geplant.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header gold">
+        <span class="icon">➕</span>
+        <div><div class="title">Gespräch einplanen</div></div>
+      </div>
+      <div class="card-body">
+        <div class="field-wrap">
+          <div class="field-label">Mit wem?</div>
+          <input type="text" id="p-person" placeholder="z.B. Maria Schneider · CFO · ehemalige Kollegin bei Firma X">
+        </div>
+        <div class="field-wrap">
+          <div class="field-label">Zu welcher Option?</div>
+          <select id="p-option">
+            <option value="">Option wählen...</option>
+          </select>
+        </div>
+        <div class="field-wrap">
+          <div class="field-label">Warum diese Person?</div>
+          <div class="field-sub">Welche Perspektive bringt er ein die du noch nicht hast?</div>
+          <textarea id="p-warum" placeholder="z.B. Er kennt den neuen Eigentümer von innen · Er hat vor 2 Jahren eine ähnliche Übernahme erlebt · Er steht völlig außerhalb und sieht das mit anderen Augen" style="min-height:56px;"></textarea>
+        </div>
+        <div class="field-wrap">
+          <div class="field-label">Geplant für</div>
+          <input type="text" id="p-wann" placeholder="z.B. Diese Woche · KW 14 · vor dem 15. April · so bald wie möglich">
+        </div>
+        <button class="save-btn" onclick="savePlanung()">Gespräch einplanen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ GESPRÄCHE ═══ -->
+  <div class="screen" id="screen-gespraeche">
+    <div class="evid-bar">📚 Evidenz: Strukturierte Gesprächsvorbereitung mit klarer Intention erhöht die Qualität der gewonnenen Informationen signifikant. (Ury 1991 · Fisher et al. 1981)</div>
+
+    <div id="gespraeche-list"></div>
+
+    <button class="add-btn" onclick="openNeuesGespraech()">+ Neues Gespräch dokumentieren</button>
+  </div>
+
+  <!-- ═══ GESAMTBILD ═══ -->
+  <div class="screen" id="screen-gesamtbild">
+    <div class="evid-bar">📚 Evidenz: Das Sichtbarmachen von Mustern über mehrere Gespräche hinweg aktiviert intuitives Wissen das in Einzelgesprächen verborgen bleibt. (Gigerenzer 2007 · Klein 2007)</div>
+
+    <div id="gesamtbild-empty" style="text-align:center;padding:40px 20px;color:var(--greige-d);font-size:13px;">
+      <div style="font-size:32px;margin-bottom:12px;">🧭</div>
+      <div>Noch keine Gespräche dokumentiert.</div>
+      <div style="margin-top:6px;font-size:11px;">Das Bild verdichtet sich nach dem ersten Gespräch.</div>
+    </div>
+
+    <div id="gesamtbild-content" style="display:none;">
+      <div class="card">
+        <div class="card-header teal">
+          <span class="icon">📊</span>
+          <div><div class="title">Empfinden pro Option</div><div class="hint">Durchschnitt aller Gespräche · Skala 1-10</div></div>
+        </div>
+        <div class="card-body" id="gb-optionen-body"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header gold">
+          <span class="icon">💡</span>
+          <div><div class="title">Was sich verdichtet</div><div class="hint">Muster · Überraschungen · Körpergefühl</div></div>
+        </div>
+        <div class="card-body">
+          <div id="gb-insights"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header mid">
+          <span class="icon">📓</span>
+          <div><div class="title">Meine Gesamtreflexion</div><div class="hint">Was sagt mir das alles?</div></div>
+        </div>
+        <div class="card-body">
+          <div class="field-wrap">
+            <div class="field-label">Was verdichtet sich — wohin zieht es mich?</div>
+            <textarea id="gb-verdichtet" placeholder="z.B. Nach drei Gesprächen merke ich dass Option B mich am meisten anzieht — nicht rational, sondern energetisch. Wenn ich daran denke werde ich wacher. Bei Option A werde ich ruhiger — aber nicht im guten Sinne."></textarea>
+          </div>
+          <div class="field-wrap">
+            <div class="field-label">Was ist noch unklar — was brauche ich noch?</div>
+            <textarea id="gb-unklar" placeholder="z.B. Ich muss noch mit jemandem sprechen der die externe Firma von innen kennt. Und ich will verstehen wie stabil die Führungsstruktur wirklich ist bevor ich entscheide."></textarea>
+          </div>
+          <div class="field-wrap">
+            <div class="field-label">Was bringt mich in die nächste Session mit Kathrin?</div>
+            <textarea id="gb-session" placeholder="z.B. Die Spannung zwischen meinem Kopf und meinem Bauch bei Option A. Das Gefühl dass ich noch nicht alle Informationen habe. Die Frage ob ich bereit bin für den Schritt nach außen." style="min-height:56px;"></textarea>
+          </div>
+          <button class="save-btn" onclick="saveGesamtbild()">Reflexion speichern</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header purple">
+          <span class="icon">🔭</span>
+          <div><div class="title">Der nächste Schritt — Systemische Aufstellung</div><div class="hint">Im Gesamtprozess bereits enthalten</div></div>
+        </div>
+        <div class="card-body">
+          <p style="font-size:13px;line-height:1.8;color:var(--text);margin-bottom:14px;">Nach dem Sensing-Prozess folgt eine systemische Aufstellung. Sie ist fester Bestandteil des gemeinsamen Prozesses — kein optionaler Schritt, sondern der Moment wo das was du in den Gesprächen gesammelt hast eine neue Tiefe bekommt.</p>
+
+          <div style="background:var(--purple-bg);border-radius:12px;padding:16px;margin-bottom:14px;">
+            <div style="font-size:11px;font-weight:700;color:var(--purple-fg);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">Was wir in der Aufstellung herausarbeiten:</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="font-size:12px;color:var(--purple-fg);line-height:1.6;">→  Ein tragendes Zukunftsbild — konkret · körperlich spürbar · wirklich deins</div>
+              <div style="font-size:12px;color:var(--purple-fg);line-height:1.6;">→  Emotionales Commitment zu deiner Entscheidung</div>
+              <div style="font-size:12px;color:var(--purple-fg);line-height:1.6;">→  Klarheit die kein Gespräch und keine Analyse geben kann</div>
+              <div style="font-size:12px;color:var(--purple-fg);line-height:1.6;">→  Ein inneres Bild das lange nachwirkt — und trägt</div>
+            </div>
+          </div>
+
+          <div style="background:var(--gold-light);border-radius:12px;padding:16px;margin-bottom:14px;border-left:4px solid var(--gold);">
+            <div style="font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Eine persönliche Botschaft von Kathrin</div>
+            <p style="font-size:12px;color:var(--text);line-height:1.8;">„Ich arbeite seit Jahren mit systemischen Aufstellungen — und sie gehören zu den kraftvollsten Momenten die ich in meiner Arbeit erlebe. Was in einer Aufstellung entsteht ist kein Konzept. Es ist ein Bild. Und dieses Bild wirkt. Manchmal noch Monate später.</p>
+            <p style="font-size:12px;color:var(--text);line-height:1.8;margin-top:8px;">Was ich immer wieder sehe: Menschen gehen rein mit einer Frage — und kommen raus mit einer Gewissheit. Das ist kein Zufall. Das ist die Kraft des Systems wenn man es sehen lässt was es zeigen will."</p>
+            <div style="font-size:11px;color:var(--gold);font-weight:600;margin-top:10px;">Kathrin Heinrich · Change Maker Karriere Beratung</div>
+          </div>
+
+          <div class="evid-bar" style="margin-bottom:0;">📚 Evidenz: Systemische Aufstellungen ermöglichen Zugang zu implizitem Wissen das kognitiven Prozessen nicht zugänglich ist — und erzeugen emotionales Commitment das rationale Entscheidungsprozesse allein nicht leisten können. (Sparrer & Varga von Kibéd 2000)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── GESPRÄCHS-MODAL ── -->
+<div id="modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Gespräch dokumentieren</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <!-- WIZARD STEPPER -->
+    <div class="wiz-stepper">
+      <div class="wiz-step-indicator active" data-step="1" onclick="wizGoTo(1)"></div>
+      <div class="wiz-step-indicator" data-step="2" onclick="wizGoTo(2)"></div>
+      <div class="wiz-step-indicator" data-step="3" onclick="wizGoTo(3)"></div>
+      <div class="wiz-step-indicator" data-step="4" onclick="wizGoTo(4)"></div>
+      <div class="wiz-step-indicator" data-step="5" onclick="wizGoTo(5)"></div>
+      <div class="wiz-step-indicator" data-step="6" onclick="wizGoTo(6)"></div>
+      <div class="wiz-step-indicator" data-step="7" onclick="wizGoTo(7)"></div>
+    </div>
+
+    <div class="wiz-step-meta">
+      <span class="wiz-step-num" id="wiz-step-num">Schritt 1 von 7 · Vor dem Gespräch</span>
+    </div>
+    <h2 class="wiz-step-title" id="wiz-step-title">Kontext</h2>
+    <div class="wiz-step-sub" id="wiz-step-sub">Mit wem sprichst du worüber? Was willst du wissen?</div>
+
+    <div class="modal-body">
+
+      <!-- ─── SCHRITT 1: KONTEXT ─── -->
+      <div class="wiz-step active" data-step="1">
+        <div class="field-wrap">
+          <div class="field-label">Mit wem spreche ich?</div>
+          <input type="text" id="g-person" placeholder="z.B. Thomas Berger · neuer CCO · kennt die Eigentümerstruktur von innen">
+        </div>
+        <div class="field-wrap">
+          <div class="field-label">Zu welcher Option?</div>
+          <select id="g-option">
+            <option value="">Option wählen...</option>
+          </select>
+        </div>
+        <div class="field-wrap" style="margin-bottom:0;">
+          <div class="field-label">Was will ich unbedingt wissen?</div>
+          <div class="field-sub">Die 2-3 wichtigsten Fragen die ich beantwortet haben möchte</div>
+          <textarea id="g-wissen" placeholder="1. Was erwartet man wirklich von mir in dieser Rolle?&#10;2. Wie stabil ist die Struktur nach der Übernahme?&#10;3. Wer hat wirklich Entscheidungshoheit?"></textarea>
+        </div>
+      </div>
+
+      <!-- ─── SCHRITT 2: WAS WILLST DU MITNEHMEN? ─── -->
+      <div class="wiz-step" data-step="2">
+        <div style="background:var(--purple-bg);border-radius:14px;padding:20px;border-left:4px solid var(--purple-fg);margin-bottom:0;">
+          <div style="font-size:13px;color:var(--purple-fg);line-height:1.65;margin-bottom:18px;font-weight:500;">Wer mit klarer Intention in ein Gespräch geht, hört anders zu — und bekommt andere Antworten.</div>
+          <div class="field-wrap" style="margin-bottom:0;">
+            <div class="field-label" style="color:var(--purple-fg);">Was will ich aus diesem Gespräch mitnehmen?</div>
+            <div class="field-sub">Inhalte, Erkenntnisse, ein Gefühl — was wäre der wertvollste Ertrag?</div>
+            <textarea id="g-intention-was" placeholder="z.B. Ein ehrliches Bild der Machtstrukturen nach der Übernahme. Verstehen ob mein bisheriger Einfluss in der neuen Struktur erhalten bleibt. Spüren ob ich dieser Person vertrauen kann."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── SCHRITT 3: WAS WILLST DU VERMEIDEN? ─── -->
+      <div class="wiz-step" data-step="3">
+        <div class="field-wrap">
+          <div class="field-label">Was will ich in diesem Gespräch NICHT tun?</div>
+          <div class="field-sub">Was soll dich nicht verleiten — worauf willst du bewusst verzichten?</div>
+          <textarea id="g-intention-nicht" placeholder="z.B. Ich will mich nicht von einer guten Präsentation blenden lassen. Ich will keine voreiligen Zusagen machen. Ich will nicht zu früh meine Karten zeigen."></textarea>
+        </div>
+        <div style="background:var(--purple-bg);border-radius:12px;padding:16px 18px;border-left:4px solid var(--purple-fg);margin-bottom:0;">
+          <div style="font-size:13px;color:var(--purple-fg);line-height:1.7;font-weight:500;">💡 Tipp: Wer weiß, was er NICHT tun will, bleibt im Gespräch souveräner — auch wenn der Sog zur Anpassung groß wird.</div>
+        </div>
+      </div>
+
+      <!-- ─── SCHRITT 4: WIE WILLST DU WIRKEN? ─── -->
+      <div class="wiz-step" data-step="4">
+        <div class="field-wrap">
+          <div class="field-label">Wie will ich in diesem Gespräch wirken?</div>
+          <div class="field-sub">Welchen Eindruck soll dein Gegenüber von dir mitnehmen?</div>
+          <textarea id="g-intention-wirken" placeholder="z.B. Neugierig und offen — nicht evaluierend. Ich will zuhören bevor ich spreche. Ich will Stärke ohne Druck zeigen."></textarea>
+        </div>
+
+        <div class="field-wrap" style="margin-bottom:0;">
+          <div class="field-label">Mit welcher Haltung gehe ich rein?</div>
+          <div class="field-sub">Wähle alles aus, was passt — oder formulier deine eigene Haltung</div>
+          <div class="chip-row" id="haltung-chips">
+            <div class="chip" onclick="toggleChip(this,'Neugierig')">Neugierig</div>
+            <div class="chip" onclick="toggleChip(this,'Offen')">Offen</div>
+            <div class="chip" onclick="toggleChip(this,'Forschend')">Forschend</div>
+            <div class="chip" onclick="toggleChip(this,'Beobachtend')">Beobachtend</div>
+            <div class="chip" onclick="toggleChip(this,'Kritisch prüfend')">Kritisch prüfend</div>
+            <div class="chip" onclick="toggleChip(this,'Zuhörend')">Zuhörend</div>
+            <div class="chip" onclick="toggleChip(this,'Verantwortung für vertrauensvolle Atmosphäre')">Verantwortung für vertrauensvolle Atmosphäre</div>
+            <div class="chip" onclick="toggleChip(this,'Dem anderen eine gute Zeit bescheren')">Dem anderen eine gute Zeit bescheren</div>
+          </div>
+          <input type="text" id="g-haltung-freitext" placeholder="Eigene Haltung formulieren..." style="margin-top:6px;">
+        </div>
+      </div>
+
+      <!-- ─── SCHRITT 5: WAS WAR ─── -->
+      <div class="wiz-step" data-step="5">
+        <div class="field-wrap">
+          <div class="field-label">Was habe ich erfahren?</div>
+          <div class="field-sub">Fakten · Informationen · was neu ist</div>
+          <textarea id="g-erfahren" placeholder="z.B. Die neue Struktur sieht drei Berichtslinien vor — meine Rolle wird direkt dem neuen Group CEO berichten. Das Team wird nicht verkleinert. Budget-Entscheidungen bleiben lokal."></textarea>
+        </div>
+        <div class="field-wrap" style="margin-bottom:0;">
+          <div class="field-label">Was hat mich überrascht?</div>
+          <textarea id="g-ueberraschung" placeholder="z.B. Er war überraschend offen — hat sogar von internen Spannungen erzählt die ich nicht erwartet hätte. Oder: Die Rolle ist deutlich größer als in der offiziellen Beschreibung."></textarea>
+        </div>
+      </div>
+
+      <!-- ─── SCHRITT 6: WIE ES SICH ANFÜHLT ─── -->
+      <div class="wiz-step" data-step="6">
+        <div class="field-wrap">
+          <div class="field-label">Wie fühlt sich die Option jetzt an — körperlich?</div>
+          <div class="field-sub">Bauchgefühl · Energie · Resonanz im Körper</div>
+          <textarea id="g-koerper" placeholder="z.B. Ich spüre Aufregung — mein Herzschlag hat sich beschleunigt als er von der Rolle erzählt hat. Oder: Ich fühle mich ruhig aber nicht wirklich lebendig. Oder: Da ist eine Enge in meiner Brust."></textarea>
+        </div>
+
+        <div class="skala-wrap" style="margin-bottom:0;">
+          <div class="field-label">Mein direktes Empfinden — kann ich mir das vorstellen?</div>
+          <div class="field-sub">Skala 1-10 · spontan · ohne Nachdenken</div>
+          <div class="skala-row">
+            <input type="range" min="1" max="10" value="5" id="g-empfinden" oninput="updateEmpfinden()">
+            <span class="skala-val" id="empfinden-val">5</span>
+          </div>
+          <div class="skala-labels">
+            <span>1 — Kann ich mir kaum vorstellen</span>
+            <span>10 — Absolut ja</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── SCHRITT 7: WAS FOLGT DARAUS ─── -->
+      <div class="wiz-step" data-step="7">
+        <div class="field-wrap">
+          <div class="field-label">3 gute Gründe die für diese Option sprechen</div>
+          <div class="field-sub">Auch wenn du noch unsicher bist — was spricht dafür?</div>
+          <textarea id="g-gruende" placeholder="1. ...&#10;2. ...&#10;3. ..."></textarea>
+        </div>
+        <div class="field-wrap">
+          <div class="field-label">Mit wem könnte ich noch darüber reden?</div>
+          <div class="field-sub">Wer hätte eine hilfreiche Perspektive? Wer kennt das System?</div>
+          <textarea id="g-weitere" placeholder="z.B. Ehemalige Kollegen die ähnliche Entscheidungen getroffen haben · Mentor · jemand der den neuen Eigentümer kennt..."></textarea>
+        </div>
+        <div class="field-wrap">
+          <div class="field-label">Welche weiteren Optionen sind durch dieses Gespräch entstanden?</div>
+          <div class="field-sub">Hat das Gespräch neue Möglichkeiten eröffnet die du vorher nicht gesehen hast?</div>
+          <textarea id="g-neue-optionen" placeholder="z.B. Mein Gesprächspartner hat eine dritte Möglichkeit erwähnt die ich noch nicht auf dem Radar hatte..."></textarea>
+        </div>
+        <div class="field-wrap" style="margin-bottom:0;">
+          <div class="field-label">Welche Fragen sind neu entstanden?</div>
+          <textarea id="g-fragen" placeholder="Was ist durch dieses Gespräch offen geblieben oder neu aufgetaucht?"></textarea>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- WIZARD NAVIGATION -->
+    <div class="wiz-nav">
+      <button class="wiz-back" id="wiz-back-btn" onclick="wizBack()" disabled>← Zurück</button>
+      <button class="wiz-next" id="wiz-next-btn" onclick="wizNext()">Weiter →</button>
+      <button class="wiz-save" id="wiz-save-btn" onclick="saveGespraech()" style="display:none;">💾 Gespräch speichern</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── INTENTION-ÜBUNG (Standalone Wizard) ── -->
+<div id="int-modal" class="int-modal-container">
+  <div class="modal-box" data-step="2" style="--accent: var(--purple-fg); --accent-soft: var(--purple-bg);">
+    <div class="modal-header" style="background:var(--purple-fg);">
+      <div>
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.7);font-family:'DM Mono',monospace;margin-bottom:2px;">2-Minuten-Übung</div>
+        <div class="modal-title">🎯 Klare Intention bilden</div>
+      </div>
+      <button class="modal-close" onclick="closeIntentionModal()">✕</button>
+    </div>
+
+    <!-- WIZARD STEPPER -->
+    <div class="wiz-stepper">
+      <div class="wiz-step-indicator active" data-step="1" onclick="intGoTo(1)"></div>
+      <div class="wiz-step-indicator" data-step="2" onclick="intGoTo(2)"></div>
+      <div class="wiz-step-indicator" data-step="3" onclick="intGoTo(3)"></div>
+      <div class="wiz-step-indicator" data-step="4" onclick="intGoTo(4)"></div>
+    </div>
+
+    <div class="wiz-step-meta">
+      <span class="wiz-step-num" id="int-step-num">Schritt 1 von 4</span>
+    </div>
+    <h2 class="wiz-step-title" id="int-step-title">Was?</h2>
+    <div class="wiz-step-sub" id="int-step-sub">Mit wem sprichst du — und was willst du mitnehmen?</div>
+
+    <div class="modal-body">
+
+      <!-- ─── SCHRITT 1: WAS? ─── -->
+      <div class="wiz-step active" data-step="1">
+        <div class="field-wrap">
+          <div class="field-label">Mit wem hast du das nächste Gespräch?</div>
+          <input type="text" id="int-person" placeholder="z.B. Thomas Berger · neuer CCO">
+        </div>
+        <div class="field-wrap">
+          <div class="field-label">Worum geht es im Kern?</div>
+          <div class="field-sub">Ein Satz reicht — der Anker für deine Reflexion</div>
+          <input type="text" id="int-thema" placeholder="z.B. Erste Einschätzung zur neuen Rolle nach der Übernahme">
+        </div>
+        <div class="field-wrap" style="margin-bottom:0;">
+          <div class="field-label">Was will ich aus diesem Gespräch unbedingt mitnehmen?</div>
+          <div class="field-sub">Inhalte, Erkenntnisse, ein Gefühl — was wäre der wertvollste Ertrag?</div>
+          <textarea id="int-mitnehmen" placeholder="z.B. Ein ehrliches Bild der Machtstrukturen nach der Übernahme. Verstehen ob mein bisheriger Einfluss erhalten bleibt. Spüren ob ich dieser Person vertrauen kann."></textarea>
+        </div>
+      </div>
+
+      <!-- ─── SCHRITT 2: WAS NICHT? ─── -->
+      <div class="wiz-step" data-step="2">
+        <div class="field-wrap">
+          <div class="field-label">Was will ich in diesem Gespräch NICHT tun?</div>
+          <div class="field-sub">Wovon willst du dich nicht verleiten lassen? Worauf bewusst verzichten?</div>
+          <textarea id="int-nicht" placeholder="z.B. Ich will mich nicht von einer guten Präsentation blenden lassen. Ich will keine voreiligen Zusagen machen. Ich will nicht zu früh meine Karten zeigen." style="min-height:140px;"></textarea>
+        </div>
+        <div style="background:var(--purple-bg);border-radius:12px;padding:16px 18px;border-left:4px solid var(--purple-fg);margin-bottom:0;">
+          <div style="font-size:12px;color:var(--purple-fg);line-height:1.7;font-style:italic;">💡 Tipp: Wer weiß, was er NICHT tun will, bleibt im Gespräch souveräner — auch wenn der Sog zur Anpassung groß wird.</div>
+        </div>
+      </div>
+
+      <!-- ─── SCHRITT 3: WIE? ─── -->
+      <div class="wiz-step" data-step="3">
+        <div class="field-wrap">
+          <div class="field-label">Mit welcher Haltung gehe ich rein?</div>
+          <div class="field-sub">Wähle alles aus, was passt — oder formulier deine eigene Haltung</div>
+          <div class="chip-row" id="int-haltung-chips">
+            <div class="chip" onclick="intToggleChip(this,'Neugierig')">Neugierig</div>
+            <div class="chip" onclick="intToggleChip(this,'Offen')">Offen</div>
+            <div class="chip" onclick="intToggleChip(this,'Forschend')">Forschend</div>
+            <div class="chip" onclick="intToggleChip(this,'Beobachtend')">Beobachtend</div>
+            <div class="chip" onclick="intToggleChip(this,'Kritisch prüfend')">Kritisch prüfend</div>
+            <div class="chip" onclick="intToggleChip(this,'Zuhörend')">Zuhörend</div>
+            <div class="chip" onclick="intToggleChip(this,'Klar')">Klar</div>
+            <div class="chip" onclick="intToggleChip(this,'Geduldig')">Geduldig</div>
+            <div class="chip" onclick="intToggleChip(this,'Verantwortung für vertrauensvolle Atmosphäre')">Verantwortung für vertrauensvolle Atmosphäre</div>
+            <div class="chip" onclick="intToggleChip(this,'Dem anderen eine gute Zeit bescheren')">Dem anderen eine gute Zeit bescheren</div>
+          </div>
+          <input type="text" id="int-haltung-freitext" placeholder="Eigene Haltung formulieren..." style="margin-top:6px;">
+        </div>
+        <div class="field-wrap" style="margin-bottom:0;">
+          <div class="field-label">Wie will ich konkret wirken?</div>
+          <div class="field-sub">Welchen Eindruck soll dein Gegenüber von dir mitnehmen?</div>
+          <textarea id="int-wirken" placeholder="z.B. Neugierig und offen — nicht evaluierend. Ich will zuhören bevor ich spreche. Ich will Stärke ohne Druck zeigen."></textarea>
+        </div>
+      </div>
+
+      <!-- ─── SCHRITT 4: ZUSAMMENFASSUNG ─── -->
+      <div class="wiz-step" data-step="4">
+        <div style="background:var(--purple-bg);border-radius:14px;padding:24px;border-left:4px solid var(--purple-fg);margin-bottom:18px;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--purple-fg);margin-bottom:14px;font-family:'DM Mono',monospace;">Deine Intention auf einen Blick</div>
+          <div id="int-summary" style="font-size:14px;color:var(--text);line-height:1.8;"></div>
+        </div>
+
+        <div style="background:var(--evid-bg);border-radius:12px;padding:16px 18px;margin-bottom:18px;">
+          <div style="font-size:13px;color:var(--evid-fg);line-height:1.7;font-style:italic;">📚 Nimm dir 30 Sekunden vor dem Gespräch, diese Intention nochmal zu lesen. Das verankert sie körperlich — und macht den Unterschied im Raum.</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <button onclick="intExportPDF()" style="background:var(--purple-fg);color:white;border:none;padding:14px;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">📄 Als PDF exportieren</button>
+          <button onclick="intInGespraechUebernehmen()" style="background:var(--white);color:var(--purple-fg);border:1.5px solid var(--purple-fg);padding:14px;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">📝 In neues Gespräch übernehmen</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- WIZARD NAVIGATION -->
+    <div class="wiz-nav">
+      <button class="wiz-back" id="int-back-btn" onclick="intBack()" disabled>← Zurück</button>
+      <button class="wiz-next" id="int-next-btn" onclick="intNext()">Weiter →</button>
+      <button class="wiz-save" id="int-finish-btn" onclick="closeIntentionModal()" style="display:none;background:var(--purple-fg);box-shadow:0 4px 14px rgba(81,45,168,.35);">✓ Übung abschließen</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- LINK DIALOG -->
+<div id="link-dialog">
+  <div class="link-box">
+    <h3>🔗 Dein persönlicher Link</h3>
+    <p>Kopiere diesen Link und speichere ihn sicher — als Lesezeichen oder in deinen Notizen.</p>
+    <input id="link-output" readonly type="text" value="">
+    <div class="link-btns">
+      <button class="btn-copy" onclick="copyLink()">Kopieren</button>
+      <button class="btn-close-d" onclick="closeLink()">Schliessen</button>
+    </div>
+    <div style="background:#fde8e8;border-radius:10px;padding:12px 14px;margin-top:12px;border-left:4px solid #c0544a;">
+      <div style="font-size:11px;font-weight:700;color:#c0544a;margin-bottom:4px;">⚠️ Wichtig — bitte lesen</div>
+      <div style="font-size:11px;color:#c0544a;line-height:1.7;">Deine Daten existieren <strong>ausschliesslich in diesem Link</strong>.<br><strong>Wenn du diesen Link verlierst, sind deine Einträge unwiederbringlich weg.</strong><br>Speichere ihn jetzt — als Lesezeichen oder schick ihn dir selbst per E-Mail.</div>
+    </div>
+    <div style="font-size:10px;color:var(--greige-d);margin-top:10px;text-align:center;">🔒 Kein Server · keine Weitergabe · volle Kontrolle bei dir</div>
+  </div>
+</div>
+
+<!-- FAB -->
+<div class="fab-row">
+  <button class="fab gold" onclick="createLink()">🔗 Link zum Speichern deiner Daten erstellen</button>
+  <button class="fab" style="background:var(--teal-mid);" onclick="exportPDF()">📄 PDF Export</button>
+  <button class="fab" onclick="openNeuesGespraech()">+ Gespräch</button>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'cmkb_kompass_v1';
+const SESSION_KEY = 'cmkb_kompass_auth';
+let appData = { optionen: [], gespraeche: [], gesamtbild: null };
+let selectedHaltung = [];
+let editGespraechId = null;
+
+// ── LOGIN ─────────────────────────────────────────────────
+function isValidPassword(pw) {
+  return /^K[\-]?\d{4}[\-]?\d{2,4}$/i.test(pw.trim());
+}
+function doLogin() {
+  const pw = document.getElementById('login-pw').value;
+  const err = document.getElementById('login-error');
+  if (isValidPassword(pw)) {
+    sessionStorage.setItem(SESSION_KEY, '1');
+    document.getElementById('login-screen').classList.add('hidden');
+    var b = document.getElementById('warn-banner'); if(b){ b.style.display='flex'; }
+    err.textContent = '';
+    init();
+  } else {
+    err.textContent = 'Passwort nicht erkannt — bitte prüfe deine Client-ID.';
+    document.getElementById('login-pw').style.borderColor = '#c0544a';
+    setTimeout(() => { document.getElementById('login-pw').style.borderColor = ''; }, 1500);
+  }
+}
+function checkLogin() {
+  if (sessionStorage.getItem(SESSION_KEY)) {
+    document.getElementById('login-screen').classList.add('hidden');
+    var b = document.getElementById('warn-banner'); if(b){ b.style.display='flex'; }
+    return true;
+  }
+  return false;
+}
+
+// ── DATA ─────────────────────────────────────────────────
+function loadData() {
+  try {
+    const p = new URLSearchParams(window.location.search);
+    const d = p.get('d');
+    if (d) { appData = JSON.parse(decodeURIComponent(atob(d))); localStorage.setItem(STORAGE_KEY, JSON.stringify(appData)); return; }
+  } catch(e) {}
+  try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) appData = JSON.parse(raw); } catch(e) {}
+}
+function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+  updateBadge();
+}
+function init() {
+  if (!checkLogin()) return;
+  loadData();
+  if (!appData.planung) appData.planung = [];
+  updateBadge();
+  buildOptionen();
+  buildGespraeche();
+  buildPlanung();
+  loadGesamtbild();
+  updateOptionSelect();
+}
+function updateBadge() {
+  const n = appData.gespraeche.length;
+  document.getElementById('count-badge').textContent = n + ' Gespräch' + (n === 1 ? '' : 'e');
+}
+
+// ── OPTIONEN ─────────────────────────────────────────────
+function saveOption() {
+  const name = document.getElementById('opt-name').value.trim();
+  if (!name) { showToast('Bitte einen Namen eingeben'); return; }
+  const opt = {
+    id: Date.now(),
+    name,
+    desc: document.getElementById('opt-desc').value,
+    pro: document.getElementById('opt-pro').value,
+    con: document.getElementById('opt-con').value,
+  };
+  appData.optionen.push(opt);
+  saveData();
+  ['opt-name','opt-desc','opt-pro','opt-con'].forEach(id => document.getElementById(id).value = '');
+  buildOptionen();
+  updateOptionSelect();
+  showToast('Option gespeichert ✓');
+}
+
+function deleteOption(id) {
+  if (!confirm('Option löschen?')) return;
+  appData.optionen = appData.optionen.filter(o => o.id !== id);
+  saveData(); buildOptionen(); updateOptionSelect();
+}
+
+function buildOptionen() {
+  const list = document.getElementById('optionen-list');
+  list.innerHTML = '';
+  if (appData.optionen.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:30px;color:var(--greige-d);font-size:12px;">Noch keine Optionen angelegt.</div>';
+    return;
+  }
+  appData.optionen.forEach((opt, i) => {
+    const avgScore = getAvgScore(opt.id);
+    const scoreClass = avgScore === 0 ? 'score-0' : avgScore < 4 ? 'score-low' : avgScore < 7 ? 'score-mid' : 'score-high';
+    const div = document.createElement('div');
+    div.className = 'option-card';
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <div class="option-num">Option ${i+1}</div>
+          <div class="option-title">${opt.name}</div>
+          ${opt.desc ? `<div class="option-desc">${opt.desc}</div>` : ''}
+        </div>
+        <button onclick="deleteOption(${opt.id})" style="background:none;border:none;color:var(--greige-d);cursor:pointer;font-size:14px;padding:4px;">🗑</button>
+      </div>
+      ${opt.pro ? `<div style="font-size:11px;color:var(--evid-fg);margin-top:8px;">✅ ${opt.pro}</div>` : ''}
+      ${opt.con ? `<div style="font-size:11px;color:var(--yellow-fg);margin-top:4px;">⚠️ ${opt.con}</div>` : ''}
+      <div class="option-score">
+        <span class="score-badge ${scoreClass}">${avgScore > 0 ? 'Ø ' + avgScore.toFixed(1) : 'Noch kein Empfinden'}</span>
+        <span style="font-size:10px;color:var(--greige-d);">${appData.gespraeche.filter(g=>g.optionId==opt.id).length} Gespräch(e)</span>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function getAvgScore(optId) {
+  const gs = appData.gespraeche.filter(g => g.optionId == optId && g.empfinden);
+  if (!gs.length) return 0;
+  return gs.reduce((s,g) => s + parseInt(g.empfinden), 0) / gs.length;
+}
+
+function updateOptionSelect() {
+  ['g-option','p-option'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    sel.innerHTML = '<option value="">Option wählen...</option>';
+    appData.optionen.forEach(opt => {
+      const o = document.createElement('option');
+      o.value = opt.id;
+      o.textContent = opt.name;
+      sel.appendChild(o);
+    });
+  });
+}
+
+// ── PLANUNG ───────────────────────────────────────────────
+function savePlanung() {
+  const person = document.getElementById('p-person').value.trim();
+  if (!person) { showToast('Bitte einen Namen eingeben'); return; }
+  const optId = document.getElementById('p-option').value;
+  const optName = optId ? (appData.optionen.find(o => o.id == optId)||{}).name : '';
+  const p = {
+    id: Date.now(),
+    person,
+    optionId: optId,
+    optionName: optName,
+    warum: document.getElementById('p-warum').value,
+    wann: document.getElementById('p-wann').value,
+    status: 'geplant',
+  };
+  if (!appData.planung) appData.planung = [];
+  appData.planung.push(p);
+  saveData();
+  ['p-person','p-warum','p-wann'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('p-option').value = '';
+  buildPlanung();
+  showToast('Gespräch eingeplant ✓');
+}
+
+function updatePlanungStatus(id, status) {
+  const p = appData.planung.find(x => x.id === id);
+  if (p) { p.status = status; saveData(); buildPlanung(); showToast('Status aktualisiert'); }
+}
+
+function deletePlanung(id) {
+  if (!confirm('Eintrag löschen?')) return;
+  appData.planung = appData.planung.filter(x => x.id !== id);
+  saveData(); buildPlanung();
+}
+
+// ── KOPIEREN & KALENDER-EXPORT ───────────────────────────
+// Helfer: Strukturierten Text für ein Planungs-Item bauen
+function planungAsText(p) {
+  const optName = p.optionName ? p.optionName : '—';
+  const wann    = p.wann || '(noch offen)';
+  const warum   = p.warum ? p.warum.trim() : '';
+
+  let txt = `Gespräch mit ${p.person}\n`;
+  txt += '─'.repeat(Math.min(40, ('Gespräch mit ' + p.person).length)) + '\n\n';
+  txt += `Geplant für:  ${wann}\n`;
+  txt += `Zur Option:   ${optName}\n`;
+  if (warum) {
+    txt += `\nWarum diese Person:\n${warum}\n`;
+  }
+  txt += `\n— vorbereitet mit dem Gesprächs-Kompass\n`;
+  txt += `Change Maker Karriere Beratung · Kathrin Heinrich`;
+  return txt;
+}
+
+function copyPlanungAsText(id) {
+  const p = appData.planung.find(x => x.id === id);
+  if (!p) return;
+  const txt = planungAsText(p);
+
+  // Versuch 1: modernes Clipboard-API
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(
+      () => showToast('In Zwischenablage kopiert — jetzt in E-Mail einfügen ✓'),
+      () => copyPlanungFallback(txt)
+    );
+  } else {
+    copyPlanungFallback(txt);
+  }
+}
+
+// Fallback: Textarea + execCommand (für ältere Browser)
+function copyPlanungFallback(txt) {
+  const ta = document.createElement('textarea');
+  ta.value = txt;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try {
+    document.execCommand('copy');
+    showToast('In Zwischenablage kopiert ✓');
+  } catch (e) {
+    showToast('Kopieren fehlgeschlagen — bitte manuell markieren');
+  }
+  document.body.removeChild(ta);
+}
+
+// ICS-Datei (Kalender-Standard) generieren und Download triggern
+function downloadPlanungICS(id) {
+  const p = appData.planung.find(x => x.id === id);
+  if (!p) return;
+
+  // Versuche aus dem freien Datums-Text ein Datum zu parsen.
+  // Wenn nicht möglich, setze den Termin auf morgen 10:00 — die Person
+  // korrigiert das dann in ihrer Kalender-App.
+  const startDate = parseFreitextDatum(p.wann) || morgenZehn();
+  const endDate = new Date(startDate.getTime() + 60 * 60 * 1000); // +1 Stunde
+
+  const fmt = d => d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/, '');
+  const escapeICS = s => (s||'').replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');
+
+  const summary = `Gespräch mit ${p.person}`;
+  const optName = p.optionName ? `\nZur Option: ${p.optionName}` : '';
+  const warum   = p.warum     ? `\n\nWarum diese Person:\n${p.warum}` : '';
+  const description = `Vorbereitet mit dem Gesprächs-Kompass.${optName}${warum}\n\n— Change Maker Karriere Beratung · Kathrin Heinrich`;
+
+  const uid = 'gk-' + p.id + '@kathrinheinrich.de';
+  const ics = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//CMKB//Gesprächs-Kompass//DE',
+    'CALSCALE:GREGORIAN',
+    'BEGIN:VEVENT',
+    'UID:' + uid,
+    'DTSTAMP:' + fmt(new Date()),
+    'DTSTART:' + fmt(startDate),
+    'DTEND:'   + fmt(endDate),
+    'SUMMARY:' + escapeICS(summary),
+    'DESCRIPTION:' + escapeICS(description),
+    'STATUS:CONFIRMED',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Gespraech_${p.person.replace(/[^\w]/g,'_')}.ics`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Kalendereintrag heruntergeladen — bitte Termin im Kalender prüfen');
+}
+
+// Versuche, aus dem freien Datums-Text (z.B. "Diese Woche", "KW 14",
+// "vor dem 15. April") ein nutzbares Datum zu raten. Konservativ:
+// wir interpretieren nur eindeutige Muster, sonst geben wir null zurück.
+function parseFreitextDatum(s) {
+  if (!s) return null;
+  const t = s.trim().toLowerCase();
+  const heute = new Date();
+  heute.setHours(10, 0, 0, 0);
+
+  // Direktes Datum: 15.04.2026 oder 15.4. oder 15. April
+  const monate = {januar:0,februar:1,märz:2,maerz:2,april:3,mai:4,juni:5,juli:6,august:7,september:8,oktober:9,november:10,dezember:11};
+  let m;
+  // dd.mm.yyyy oder dd.mm
+  if ((m = t.match(/(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{4})?/))) {
+    const d = new Date(parseInt(m[3] || heute.getFullYear()), parseInt(m[2])-1, parseInt(m[1]), 10, 0);
+    if (!isNaN(d.getTime())) return d;
+  }
+  // dd. Monatsname
+  if ((m = t.match(/(\d{1,2})\.\s*([a-zäöü]+)/))) {
+    const mon = monate[m[2]];
+    if (mon !== undefined) {
+      let d = new Date(heute.getFullYear(), mon, parseInt(m[1]), 10, 0);
+      if (d < heute) d.setFullYear(d.getFullYear() + 1); // Wenn in Vergangenheit, nächstes Jahr
+      return d;
+    }
+  }
+  // KW XX → Montag der Kalenderwoche
+  if ((m = t.match(/kw\s*(\d{1,2})/))) {
+    const w = parseInt(m[1]);
+    const jan4 = new Date(heute.getFullYear(), 0, 4);
+    const jan4Day = jan4.getDay() || 7;
+    const mondayWeek1 = new Date(jan4); mondayWeek1.setDate(jan4.getDate() - jan4Day + 1);
+    const d = new Date(mondayWeek1); d.setDate(mondayWeek1.getDate() + (w-1)*7);
+    d.setHours(10, 0, 0, 0);
+    return d;
+  }
+  // Schlüsselwörter
+  if (t.includes('heute'))    return heute;
+  if (t.includes('morgen'))   { const d = new Date(heute); d.setDate(d.getDate()+1); return d; }
+  if (t.includes('übermorgen')) { const d = new Date(heute); d.setDate(d.getDate()+2); return d; }
+  if (t.includes('diese woche')) { const d = new Date(heute); d.setDate(d.getDate() + (5 - d.getDay())); return d; } // Freitag dieser Woche
+  if (t.includes('nächste woche')) { const d = new Date(heute); d.setDate(d.getDate()+7); return d; }
+
+  return null;
+}
+
+function morgenZehn() {
+  const d = new Date();
+  d.setDate(d.getDate() + 1);
+  d.setHours(10, 0, 0, 0);
+  return d;
+}
+
+function buildPlanung() {
+  if (!appData.planung) appData.planung = [];
+  const list = document.getElementById('planung-list');
+  const empty = document.getElementById('planung-empty');
+  list.innerHTML = '';
+  if (appData.planung.length === 0) { empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+
+  const statusColors = {
+    'geplant':       ['var(--yellow-bg)',  'var(--yellow-fg)',  '📅 Geplant'],
+    'stattgefunden': ['var(--evid-bg)',    'var(--evid-fg)',    '✅ Stattgefunden'],
+    'verschoben':    ['var(--greige-l)',   'var(--greige-d)',   '⏸ Verschoben'],
+  };
+
+  appData.planung.forEach(p => {
+    const [bg, fg, label] = statusColors[p.status] || statusColors['geplant'];
+    const hasGespraech = appData.gespraeche.some(g => g.person === p.person);
+    const div = document.createElement('div');
+    div.style.cssText = 'background:var(--white);border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:0 2px 8px rgba(11,57,72,.05);border-left:4px solid ' + fg + ';';
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--teal-dark);">👤 ${p.person}</div>
+          ${p.optionName ? `<div style="font-size:10px;color:var(--gold);font-weight:600;margin-top:2px;">${p.optionName}</div>` : ''}
+          ${p.wann ? `<div style="font-size:10px;color:var(--greige-d);font-family:'DM Mono',monospace;margin-top:2px;">📅 ${p.wann}</div>` : ''}
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+          <span style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;background:${bg};color:${fg};">${label}</span>
+          ${hasGespraech ? '<span style="font-size:9px;color:var(--evid-fg);background:var(--evid-bg);padding:2px 8px;border-radius:10px;">Dokumentiert</span>' : ''}
+        </div>
+      </div>
+      ${p.warum ? `<div style="font-size:11px;color:var(--greige-d);font-style:italic;line-height:1.5;margin-bottom:10px;">${p.warum}</div>` : ''}
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
+        <button onclick="copyPlanungAsText(${p.id})" style="flex:1;min-width:120px;padding:9px 12px;border:1.5px solid var(--purple-fg);border-radius:8px;background:var(--purple-bg);color:var(--purple-fg);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;">📋 Für E-Mail kopieren</button>
+        <button onclick="downloadPlanungICS(${p.id})" style="flex:1;min-width:120px;padding:9px 12px;border:1.5px solid var(--gold);border-radius:8px;background:var(--gold-light);color:#6b542b;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;">📅 In Kalender</button>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <button onclick="updatePlanungStatus(${p.id},'stattgefunden')" style="flex:1;min-width:80px;padding:6px 8px;border:1.5px solid var(--evid-fg);border-radius:8px;background:var(--evid-bg);color:var(--evid-fg);font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;cursor:pointer;">✅ Stattgefunden</button>
+        <button onclick="updatePlanungStatus(${p.id},'verschoben')" style="flex:1;min-width:80px;padding:6px 8px;border:1.5px solid var(--greige-l);border-radius:8px;background:var(--white);color:var(--greige-d);font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;cursor:pointer;">⏸ Verschoben</button>
+        <button onclick="updatePlanungStatus(${p.id},'geplant')" style="padding:6px 8px;border:1.5px solid var(--greige-l);border-radius:8px;background:var(--white);color:var(--greige-d);font-family:'DM Sans',sans-serif;font-size:10px;cursor:pointer;">↺</button>
+        <button onclick="openNeuesGespraechFuer('${p.person}','${p.optionId}')" style="flex:2;padding:6px 8px;border:1.5px solid var(--teal-mid);border-radius:8px;background:var(--teal-light);color:var(--teal-dark);font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;cursor:pointer;">📝 Gespräch dokumentieren</button>
+        <button onclick="deletePlanung(${p.id})" style="padding:6px 8px;border:1.5px solid var(--greige-l);border-radius:8px;background:var(--white);color:var(--red-fg);font-family:'DM Sans',sans-serif;font-size:10px;cursor:pointer;">🗑</button>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+// ── GESPRÄCHE ─────────────────────────────────────────────
+function openNeuesGespraech() {
+  editGespraechId = null;
+  document.getElementById('modal-title').textContent = 'Gespräch dokumentieren';
+  ['g-person','g-wissen','g-intention-was','g-intention-nicht','g-intention-wirken',
+   'g-haltung-freitext','g-erfahren','g-ueberraschung','g-koerper','g-gruende',
+   'g-weitere','g-neue-optionen','g-fragen'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('g-option').value = '';
+  document.getElementById('g-empfinden').value = 5;
+  updateEmpfinden();
+  selectedHaltung = [];
+  document.querySelectorAll('#haltung-chips .chip').forEach(c => c.classList.remove('selected'));
+  wizGoTo(1);
+  document.getElementById('modal').classList.add('vis');
+}
+
+function openNeuesGespraechFuer(person, optionId) {
+  openNeuesGespraech();
+  document.getElementById('g-person').value = person;
+  if (optionId) document.getElementById('g-option').value = optionId;
+  document.getElementById('modal-title').textContent = 'Gespräch mit ' + person;
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('vis');
+}
+
+// ── WIZARD-NAVIGATION ────────────────────────────────────
+const WIZ_STEPS = [
+  { num: 1, label: 'Vor dem Gespräch',  title: 'Kontext',                  sub: 'Mit wem sprichst du worüber? Was willst du wissen?' },
+  { num: 2, label: 'Vor dem Gespräch',  title: 'Was willst du mitnehmen?', sub: 'Inhalte, Erkenntnisse, ein Gefühl — was wäre der wertvollste Ertrag?' },
+  { num: 3, label: 'Vor dem Gespräch',  title: 'Was willst du vermeiden?', sub: 'Wovon willst du dich nicht verleiten lassen?' },
+  { num: 4, label: 'Vor dem Gespräch',  title: 'Wie willst du wirken?',    sub: 'Mit welcher Haltung gehst du rein? Welchen Eindruck hinterlassen?' },
+  { num: 5, label: 'Nach dem Gespräch', title: 'Was war',                  sub: 'Fakten und Überraschungen — was hast du gehört?' },
+  { num: 6, label: 'Nach dem Gespräch', title: 'Wie es sich anfühlt',      sub: 'Körper, Energie, spontanes Empfinden.' },
+  { num: 7, label: 'Nach dem Gespräch', title: 'Was folgt daraus',         sub: 'Gründe, weitere Perspektiven, neue Optionen und Fragen.' },
+];
+let currentWizStep = 1;
+
+function wizGoTo(step) {
+  step = Math.max(1, Math.min(7, step));
+  currentWizStep = step;
+  // Akzentfarbe für diesen Schritt setzen (über CSS data-step Selektor)
+  const box = document.querySelector('#modal .modal-box');
+  if (box) box.dataset.step = step;
+  // Steps zeigen/verstecken
+  document.querySelectorAll('#modal .wiz-step').forEach(el => {
+    el.classList.toggle('active', parseInt(el.dataset.step) === step);
+  });
+  // Stepper-Indikatoren
+  document.querySelectorAll('#modal .wiz-step-indicator').forEach(el => {
+    const s = parseInt(el.dataset.step);
+    el.classList.toggle('active', s === step);
+    el.classList.toggle('done', s < step);
+  });
+  // Meta-Texte
+  const meta = WIZ_STEPS[step - 1];
+  document.getElementById('wiz-step-num').textContent = `Schritt ${meta.num} von 7 · ${meta.label}`;
+  document.getElementById('wiz-step-title').textContent = meta.title;
+  document.getElementById('wiz-step-sub').textContent = meta.sub;
+  // Navigation-Buttons
+  document.getElementById('wiz-back-btn').disabled = (step === 1);
+  document.getElementById('wiz-next-btn').style.display = (step === 7) ? 'none' : 'flex';
+  document.getElementById('wiz-save-btn').style.display = (step === 7) ? 'flex' : 'none';
+  // Body nach oben scrollen
+  const body = document.querySelector('#modal .modal-body');
+  if (body) body.scrollTop = 0;
+}
+
+function wizNext() { wizGoTo(currentWizStep + 1); }
+function wizBack() { wizGoTo(currentWizStep - 1); }
+
+// ════════════════════════════════════════════════════════════
+// INTENTION-ÜBUNG (Standalone Wizard)
+// ════════════════════════════════════════════════════════════
+const INT_STEPS = [
+  { num: 1, title: 'Was?',           sub: 'Mit wem sprichst du — und was willst du mitnehmen?' },
+  { num: 2, title: 'Was nicht?',     sub: 'Wovon willst du dich nicht verleiten lassen?' },
+  { num: 3, title: 'Wie?',           sub: 'Mit welcher Haltung gehst du rein — wie willst du wirken?' },
+  { num: 4, title: 'Deine Intention',sub: 'Verankerung vor dem Gespräch.' },
+];
+let intCurrentStep = 1;
+let intSelectedHaltung = [];
+
+function openIntentionUebung() {
+  // Felder leeren
+  ['int-person','int-thema','int-mitnehmen','int-nicht','int-wirken','int-haltung-freitext'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  intSelectedHaltung = [];
+  document.querySelectorAll('#int-haltung-chips .chip').forEach(c => c.classList.remove('selected'));
+  intGoTo(1);
+  document.getElementById('int-modal').classList.add('vis');
+}
+
+function closeIntentionModal() {
+  document.getElementById('int-modal').classList.remove('vis');
+}
+
+function intGoTo(step) {
+  step = Math.max(1, Math.min(4, step));
+  intCurrentStep = step;
+  // Steps zeigen/verstecken (nur innerhalb des Intention-Modals)
+  document.querySelectorAll('#int-modal .wiz-step').forEach(el => {
+    el.classList.toggle('active', parseInt(el.dataset.step) === step);
+  });
+  // Stepper
+  document.querySelectorAll('#int-modal .wiz-step-indicator').forEach(el => {
+    const s = parseInt(el.dataset.step);
+    el.classList.toggle('active', s === step);
+    el.classList.toggle('done', s < step);
+  });
+  // Meta-Texte
+  const meta = INT_STEPS[step - 1];
+  document.getElementById('int-step-num').textContent = `Schritt ${meta.num} von 4`;
+  document.getElementById('int-step-title').textContent = meta.title;
+  document.getElementById('int-step-sub').textContent = meta.sub;
+  // Buttons
+  document.getElementById('int-back-btn').disabled = (step === 1);
+  document.getElementById('int-next-btn').style.display = (step === 4) ? 'none' : 'flex';
+  document.getElementById('int-finish-btn').style.display = (step === 4) ? 'flex' : 'none';
+  // Auf Schritt 4: Zusammenfassung zusammenbauen
+  if (step === 4) intBuildSummary();
+  // Body nach oben scrollen
+  const body = document.querySelector('#int-modal .modal-body');
+  if (body) body.scrollTop = 0;
+}
+
+function intNext() { intGoTo(intCurrentStep + 1); }
+function intBack() { intGoTo(intCurrentStep - 1); }
+
+function intToggleChip(el, val) {
+  el.classList.toggle('selected');
+  if (el.classList.contains('selected')) intSelectedHaltung.push(val);
+  else intSelectedHaltung = intSelectedHaltung.filter(h => h !== val);
+}
+
+function intBuildSummary() {
+  const person     = document.getElementById('int-person').value.trim();
+  const thema      = document.getElementById('int-thema').value.trim();
+  const mitnehmen  = document.getElementById('int-mitnehmen').value.trim();
+  const nicht      = document.getElementById('int-nicht').value.trim();
+  const wirken     = document.getElementById('int-wirken').value.trim();
+  const haltungFt  = document.getElementById('int-haltung-freitext').value.trim();
+  const haltungAll = [...intSelectedHaltung, ...(haltungFt ? [haltungFt] : [])].join(' · ');
+
+  const block = (label, val) => val
+    ? `<div style="margin-bottom:14px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--purple-fg);margin-bottom:4px;font-family:'DM Mono',monospace;">${label}</div><div style="white-space:pre-wrap;">${val}</div></div>`
+    : '';
+
+  const html =
+    block('Gespräch mit', person + (thema ? ' · ' + thema : '')) +
+    block('Was mitnehmen', mitnehmen) +
+    block('Was nicht tun', nicht) +
+    block('Haltung', haltungAll) +
+    block('Wie wirken', wirken);
+
+  document.getElementById('int-summary').innerHTML = html || '<div style="color:var(--greige-d);font-style:italic;">Noch keine Eingaben — geh zurück und füll die Schritte aus.</div>';
+}
+
+function intExportPDF() {
+  const person     = document.getElementById('int-person').value.trim() || '—';
+  const thema      = document.getElementById('int-thema').value.trim();
+  const mitnehmen  = document.getElementById('int-mitnehmen').value.trim();
+  const nicht      = document.getElementById('int-nicht').value.trim();
+  const wirken     = document.getElementById('int-wirken').value.trim();
+  const haltungFt  = document.getElementById('int-haltung-freitext').value.trim();
+  const haltungAll = [...intSelectedHaltung, ...(haltungFt ? [haltungFt] : [])].join(' · ');
+  const today = new Date().toLocaleDateString('de-DE', { day:'numeric', month:'long', year:'numeric' });
+
+  const block = (label, val) => val
+    ? `<div class="label">${label}</div><div class="val">${val.replace(/\n/g,'<br>')}</div>`
+    : '';
+
+  const html = `
+    <html><head><meta charset="UTF-8">
+    <title>Meine Intention</title>
+    <style>
+      body { font-family: Arial, sans-serif; color: #1a1a1a; padding: 40px; max-width: 720px; margin: 0 auto; }
+      h1 { color: #512da8; font-size: 24px; margin-bottom: 4px; }
+      .sub { color: #8e897a; font-size: 12px; margin-bottom: 30px; }
+      .gespr { background:#ede7f6; border-left:4px solid #512da8; padding:14px 16px; border-radius:6px; margin-bottom:24px; }
+      .gespr-label { font-size:10px; font-weight:bold; text-transform:uppercase; letter-spacing:.06em; color:#512da8; margin-bottom:4px; }
+      .gespr-val { font-size:14px; color:#1a1a1a; }
+      .label { font-size:11px; font-weight:bold; text-transform:uppercase; letter-spacing:.06em; color:#512da8; margin: 18px 0 6px; }
+      .val { font-size: 13px; line-height: 1.7; padding: 10px 14px; background: #fffcf2; border-left: 3px solid #ede7f6; border-radius: 4px; white-space: pre-wrap; }
+      .footer { margin-top: 36px; padding-top: 14px; border-top: 1px solid #dbd8ca; font-size: 10px; color: #8e897a; text-align: center; font-style: italic; }
+      @media print { body { padding: 24px; } }
+    </style>
+    </head><body>
+      <h1>🎯 Meine Intention</h1>
+      <div class="sub">2-Minuten-Übung · ${today} · Change Maker Karriere Beratung</div>
+      <div class="gespr">
+        <div class="gespr-label">Gespräch mit</div>
+        <div class="gespr-val">${person}${thema ? ' — ' + thema : ''}</div>
+      </div>
+      ${block('Was ich aus diesem Gespräch mitnehmen will', mitnehmen)}
+      ${block('Was ich in diesem Gespräch NICHT tun will', nicht)}
+      ${block('Haltung mit der ich rein gehe', haltungAll)}
+      ${block('Wie ich wirken will', wirken)}
+      <div class="footer">Lies diese Intention 30 Sekunden vor dem Gespräch nochmal durch.</div>
+    </body></html>`;
+
+  const win = window.open('', '_blank');
+  win.document.write(html);
+  win.document.close();
+  setTimeout(() => { win.print(); }, 500);
+  showToast('PDF-Dialog öffnet sich...');
+}
+
+function intInGespraechUebernehmen() {
+  // Werte aus dem Intention-Modal lesen
+  const person     = document.getElementById('int-person').value.trim();
+  const mitnehmen  = document.getElementById('int-mitnehmen').value.trim();
+  const nicht      = document.getElementById('int-nicht').value.trim();
+  const wirken     = document.getElementById('int-wirken').value.trim();
+  const haltungFt  = document.getElementById('int-haltung-freitext').value.trim();
+  const haltungArr = [...intSelectedHaltung];
+
+  // Intention-Modal schließen, Gesprächs-Modal öffnen
+  closeIntentionModal();
+  openNeuesGespraech();
+
+  // Ins Gesprächs-Modal übernehmen
+  if (person)    document.getElementById('g-person').value = person;
+  if (mitnehmen) document.getElementById('g-intention-was').value = mitnehmen;
+  if (nicht)     document.getElementById('g-intention-nicht').value = nicht;
+  if (wirken)    document.getElementById('g-intention-wirken').value = wirken;
+  if (haltungFt) document.getElementById('g-haltung-freitext').value = haltungFt;
+
+  // Haltungs-Chips übernehmen
+  selectedHaltung = [...haltungArr];
+  document.querySelectorAll('#haltung-chips .chip').forEach(c => {
+    c.classList.toggle('selected', haltungArr.includes(c.textContent));
+  });
+
+  // Direkt zu Schritt 2 (Intention) im Gesprächs-Wizard — die Daten sind dort eingefügt
+  wizGoTo(2);
+  showToast('Intention ins Gespräch übernommen ✓');
+}
+
+function updateEmpfinden() {
+  const v = document.getElementById('g-empfinden').value;
+  document.getElementById('empfinden-val').textContent = v;
+}
+
+function toggleChip(el, val) {
+  el.classList.toggle('selected');
+  if (el.classList.contains('selected')) selectedHaltung.push(val);
+  else selectedHaltung = selectedHaltung.filter(h => h !== val);
+}
+
+function saveGespraech() {
+  const person = document.getElementById('g-person').value.trim();
+  if (!person) { showToast('Bitte einen Namen eingeben'); return; }
+  const optId = document.getElementById('g-option').value;
+  const optName = optId ? (appData.optionen.find(o => o.id == optId)||{}).name : '';
+  const g = {
+    id: editGespraechId || Date.now(),
+    datum: new Date().toISOString().slice(0,10),
+    person,
+    optionId: optId,
+    optionName: optName,
+    wissen: document.getElementById('g-wissen').value,
+    intentionWas: document.getElementById('g-intention-was').value,
+    intentionNicht: document.getElementById('g-intention-nicht').value,
+    intentionWirken: document.getElementById('g-intention-wirken').value,
+    haltung: [...selectedHaltung],
+    haltungFreitext: document.getElementById('g-haltung-freitext').value,
+    erfahren: document.getElementById('g-erfahren').value,
+    ueberraschung: document.getElementById('g-ueberraschung').value,
+    koerper: document.getElementById('g-koerper').value,
+    empfinden: document.getElementById('g-empfinden').value,
+    gruende: document.getElementById('g-gruende').value,
+    weitere: document.getElementById('g-weitere').value,
+    neueOptionen: document.getElementById('g-neue-optionen').value,
+    fragen: document.getElementById('g-fragen').value,
+  };
+  if (editGespraechId) {
+    const idx = appData.gespraeche.findIndex(x => x.id === editGespraechId);
+    if (idx >= 0) appData.gespraeche[idx] = g;
+  } else {
+    appData.gespraeche.push(g);
+  }
+  saveData();
+  closeModal();
+  buildGespraeche();
+  buildOptionen();
+  buildGesamtbild();
+  showToast('Gespräch gespeichert ✓');
+}
+
+function buildGespraeche() {
+  const list = document.getElementById('gespraeche-list');
+  list.innerHTML = '';
+  if (appData.gespraeche.length === 0) {
+    list.innerHTML = `
+      <div class="gesp-teaser">
+        <div class="gesp-teaser-hero">
+          <div class="gesp-teaser-eyebrow">7 SCHRITTE · CA. 10 MINUTEN PRO GESPRÄCH</div>
+          <h2 class="gesp-teaser-title">Was du hier gewinnst</h2>
+          <p class="gesp-teaser-lead">Sensing strukturiert dokumentieren — statt jonglieren, was du wo gehört hast. Drei Gründe, warum sich diese Zeit rechnet:</p>
+        </div>
+
+        <div class="gesp-teaser-grid">
+          <div class="gesp-teaser-card">
+            <div class="gesp-teaser-num">01</div>
+            <h3 class="gesp-teaser-headline">Mustererkennung statt Anekdote</h3>
+            <p class="gesp-teaser-body">Was sich über drei Gespräche hinweg wiederholt, ist Signal. Was du einmal hörst, ist Anekdote. Erst die Dokumentation macht den Unterschied verlässlich sichtbar — und löst dich aus der Selbstreferenz.</p>
+          </div>
+
+          <div class="gesp-teaser-card">
+            <div class="gesp-teaser-num">02</div>
+            <h3 class="gesp-teaser-headline">−40 % kognitive Verzerrung</h3>
+            <p class="gesp-teaser-body">Strukturiertes Sensing reduziert Confirmation Bias um bis zu 40 % (Kahneman 2011). Bei Karriereentscheidungen mit 18-Monaten-Horizont und 35–55 k€ Einkommens-Impact: ein klar messbarer Hebel.</p>
+          </div>
+
+          <div class="gesp-teaser-card">
+            <div class="gesp-teaser-num">03</div>
+            <h3 class="gesp-teaser-headline">Körper als Datenquelle nutzen</h3>
+            <p class="gesp-teaser-body">Was du nach Gespräch 1 körperlich gespürt hast, vergisst du bis Gespräch 5. Hier bleibt es protokolliert — und damit vergleichbar. Was du kognitiv übergehst, wird zur belastbaren zweiten Datenebene.</p>
+          </div>
+        </div>
+
+        <button class="gesp-teaser-cta" onclick="openNeuesGespraech()">+ Erstes Gespräch dokumentieren</button>
+        <div class="gesp-teaser-foot">Nach drei dokumentierten Gesprächen erscheint im Tab <strong>Gesamtbild</strong> automatisch ein Vergleich aller Optionen — mit Mustern, die einzeln nicht sichtbar waren.</div>
+      </div>
+    `;
+    return;
+  }
+  [...appData.gespraeche].reverse().forEach(g => {
+    const score = parseInt(g.empfinden) || 0;
+    const scoreColor = score < 4 ? '#c0544a' : score < 7 ? '#856404' : '#2d6a2d';
+    const d = new Date(g.datum + 'T00:00:00');
+    const dateStr = d.toLocaleDateString('de-DE', { day:'numeric', month:'short' });
+    const div = document.createElement('div');
+    div.className = 'gespraech-item';
+    div.innerHTML = `
+      <div class="gi-header">
+        <div>
+          <div class="gi-person">👤 ${g.person}</div>
+          <div class="gi-date">${dateStr}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+          ${g.optionName ? `<span class="gi-option">${g.optionName}</span>` : ''}
+          ${score > 0 ? `<span style="font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:${scoreColor};">${score}/10</span>` : ''}
+        </div>
+      </div>
+      ${g.intention ? `<div style="font-size:11px;color:var(--greige-d);font-style:italic;line-height:1.5;margin-top:4px;">🎯 ${g.intention}</div>` : ''}
+      ${g.erfahren ? `<div style="font-size:11px;color:var(--text);line-height:1.5;margin-top:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${g.erfahren}</div>` : ''}
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button onclick="editGespraech(${g.id})" style="flex:1;padding:7px;border:1.5px solid var(--greige-l);border-radius:8px;background:var(--white);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:var(--greige-d);cursor:pointer;">✏ Bearbeiten</button>
+        <button onclick="deleteGespraech(${g.id})" style="padding:7px 12px;border:1.5px solid var(--greige-l);border-radius:8px;background:var(--white);font-family:'DM Sans',sans-serif;font-size:11px;cursor:pointer;color:var(--red-fg);">🗑</button>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function editGespraech(id) {
+  const g = appData.gespraeche.find(x => x.id === id);
+  if (!g) return;
+  editGespraechId = id;
+  document.getElementById('modal-title').textContent = 'Gespräch bearbeiten';
+  document.getElementById('g-person').value = g.person || '';
+  document.getElementById('g-option').value = g.optionId || '';
+  document.getElementById('g-wissen').value = g.wissen || '';
+  document.getElementById('g-intention-was').value = g.intentionWas || '';
+  document.getElementById('g-intention-nicht').value = g.intentionNicht || '';
+  document.getElementById('g-intention-wirken').value = g.intentionWirken || '';
+  document.getElementById('g-haltung-freitext').value = g.haltungFreitext || '';
+  document.getElementById('g-erfahren').value = g.erfahren || '';
+  document.getElementById('g-ueberraschung').value = g.ueberraschung || '';
+  document.getElementById('g-koerper').value = g.koerper || '';
+  document.getElementById('g-empfinden').value = g.empfinden || 5;
+  document.getElementById('g-gruende').value = g.gruende || '';
+  document.getElementById('g-weitere').value = g.weitere || '';
+  document.getElementById('g-neue-optionen').value = g.neueOptionen || '';
+  document.getElementById('g-fragen').value = g.fragen || '';
+  updateEmpfinden();
+  selectedHaltung = g.haltung || [];
+  document.querySelectorAll('#haltung-chips .chip').forEach(c => {
+    c.classList.toggle('selected', selectedHaltung.includes(c.textContent));
+  });
+  wizGoTo(1);
+  document.getElementById('modal').classList.add('vis');
+}
+
+function deleteGespraech(id) {
+  if (!confirm('Gespräch löschen?')) return;
+  appData.gespraeche = appData.gespraeche.filter(g => g.id !== id);
+  saveData(); buildGespraeche(); buildOptionen(); buildGesamtbild();
+  showToast('Gelöscht');
+}
+
+// ── GESAMTBILD ────────────────────────────────────────────
+function buildGesamtbild() {
+  const empty = document.getElementById('gesamtbild-empty');
+  const content = document.getElementById('gesamtbild-content');
+  if (appData.gespraeche.length === 0) {
+    empty.style.display = 'block'; content.style.display = 'none'; return;
+  }
+  empty.style.display = 'none'; content.style.display = 'block';
+
+  // Optionen-Scores
+  const body = document.getElementById('gb-optionen-body');
+  body.innerHTML = '';
+  if (appData.optionen.length === 0) {
+    body.innerHTML = '<div style="color:var(--greige-d);font-size:12px;">Noch keine Optionen angelegt.</div>';
+  } else {
+    appData.optionen.forEach((opt, i) => {
+      const avg = getAvgScore(opt.id);
+      const gs = appData.gespraeche.filter(g => g.optionId == opt.id);
+      const scoreColor = avg === 0 ? 'var(--greige-l)' : avg < 4 ? 'var(--red-fg)' : avg < 7 ? 'var(--yellow-fg)' : 'var(--evid-fg)';
+      const div = document.createElement('div');
+      div.className = 'gb-option-row';
+      div.innerHTML = `
+        <div class="gb-num">${i+1}</div>
+        <div class="gb-name">${opt.name}</div>
+        <div class="gb-score-bar"><div class="gb-score-fill" style="width:${avg*10}%;background:${scoreColor};"></div></div>
+        <div class="gb-score-num" style="color:${scoreColor};">${avg > 0 ? avg.toFixed(1) : '—'}</div>
+        <div class="gb-gespräche">${gs.length}×</div>
+      `;
+      body.appendChild(div);
+    });
+  }
+
+  // Insights
+  const insights = document.getElementById('gb-insights');
+  insights.innerHTML = '';
+  const ueberraschungen = appData.gespraeche.filter(g => g.ueberraschung).map(g => ({person: g.person, text: g.ueberraschung}));
+  const neueOptionen = appData.gespraeche.filter(g => g.neueOptionen).map(g => ({person: g.person, text: g.neueOptionen}));
+  const offeneFragen = appData.gespraeche.filter(g => g.fragen).map(g => ({person: g.person, text: g.fragen}));
+  const weitereGespraeche = appData.gespraeche.filter(g => g.weitere).map(g => ({person: g.person, text: g.weitere}));
+
+  const sections = [
+    { icon: '😮', label: 'Überraschungen aus den Gesprächen', items: ueberraschungen },
+    { icon: '🆕', label: 'Neue Optionen die aufgetaucht sind', items: neueOptionen },
+    { icon: '❓', label: 'Offene Fragen', items: offeneFragen },
+    { icon: '👥', label: 'Weitere Gespräche empfohlen', items: weitereGespraeche },
+  ];
+
+  sections.forEach(s => {
+    if (!s.items.length) return;
+    const div = document.createElement('div');
+    div.style.cssText = 'margin-bottom:14px;';
+    div.innerHTML = `<div style="font-size:11px;font-weight:600;color:var(--teal-dark);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">${s.icon} ${s.label}</div>`;
+    s.items.forEach(item => {
+      const p = document.createElement('div');
+      p.style.cssText = 'font-size:12px;color:var(--text);line-height:1.6;padding:8px 10px;background:var(--sand);border-radius:8px;margin-bottom:6px;';
+      p.innerHTML = `<span style="font-size:10px;color:var(--greige-d);font-weight:600;">${item.person}:</span><br>${item.text}`;
+      div.appendChild(p);
+    });
+    insights.appendChild(div);
+  });
+
+  if (insights.innerHTML === '') {
+    insights.innerHTML = '<div style="color:var(--greige-d);font-size:12px;font-style:italic;">Nach mehr Gesprächen erscheinen hier Muster und Erkenntnisse.</div>';
+  }
+}
+
+function saveGesamtbild() {
+  if (!appData.gesamtbild) appData.gesamtbild = {};
+  appData.gesamtbild.verdichtet = document.getElementById('gb-verdichtet').value;
+  appData.gesamtbild.unklar = document.getElementById('gb-unklar').value;
+  appData.gesamtbild.session = document.getElementById('gb-session').value;
+  saveData();
+  const btn = event.target;
+  btn.innerHTML = '✓ Gespeichert!'; btn.classList.add('saved');
+  setTimeout(() => { btn.innerHTML = 'Reflexion speichern'; btn.classList.remove('saved'); }, 2000);
+  showToast('Reflexion gespeichert ✓');
+}
+
+function loadGesamtbild() {
+  if (appData.gesamtbild) {
+    if (appData.gesamtbild.verdichtet) document.getElementById('gb-verdichtet').value = appData.gesamtbild.verdichtet;
+    if (appData.gesamtbild.unklar) document.getElementById('gb-unklar').value = appData.gesamtbild.unklar;
+    if (appData.gesamtbild.session) document.getElementById('gb-session').value = appData.gesamtbild.session;
+  }
+}
+
+// ── TABS ─────────────────────────────────────────────────
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    const names = ['start','optionen','planung','gespraeche','gesamtbild'];
+    t.classList.toggle('active', names[i] === name);
+  });
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  if (name === 'gesamtbild') { buildGesamtbild(); loadGesamtbild(); }
+  if (name === 'optionen') buildOptionen();
+  if (name === 'gespraeche') buildGespraeche();
+  if (name === 'planung') buildPlanung();
+}
+
+// ── LINK ─────────────────────────────────────────────────
+function createLink() {
+  try {
+    const encoded = btoa(encodeURIComponent(JSON.stringify(appData)));
+    const url = window.location.origin + window.location.pathname + '?d=' + encoded;
+    document.getElementById('link-output').value = url;
+    document.getElementById('link-dialog').classList.add('vis');
+    if (navigator.clipboard) navigator.clipboard.writeText(url).catch(()=>{});
+  } catch(e) { showToast('Fehler beim Erstellen des Links'); }
+}
+function copyLink() { navigator.clipboard.writeText(document.getElementById('link-output').value).then(() => showToast('Link kopiert! ✓')); }
+function closeLink() { document.getElementById('link-dialog').classList.remove('vis'); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── PDF EXPORT ────────────────────────────────────────────
+function exportPDF() {
+  const today = new Date().toLocaleDateString('de-DE', { day:'numeric', month:'long', year:'numeric' });
+
+  let html = `
+    <html><head><meta charset="UTF-8">
+    <style>
+      body { font-family: Arial, sans-serif; color: #1a1a1a; padding: 32px; max-width: 780px; margin: 0 auto; }
+      h1 { color: #0B3948; font-size: 22px; margin-bottom: 4px; }
+      .sub { color: #5da7b2; font-size: 12px; margin-bottom: 24px; }
+      h2 { color: #0B3948; font-size: 15px; margin: 24px 0 8px; border-bottom: 2px solid #c8e6ea; padding-bottom: 4px; }
+      h3 { color: #9f8252; font-size: 13px; margin: 16px 0 6px; }
+      .label { font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: .06em; color: #8e897a; margin-bottom: 3px; }
+      .val { font-size: 12px; line-height: 1.7; margin-bottom: 10px; padding: 8px 10px; background: #fffcf2; border-left: 3px solid #c8e6ea; border-radius: 4px; white-space: pre-wrap; }
+      .val.gold { border-left-color: #9f8252; }
+      .val.purple { border-left-color: #512da8; background: #ede7f6; }
+      .score { display: inline-block; background: #0B3948; color: white; padding: 3px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; margin: 4px 0 10px; }
+      .option-block { background: #f5f0e8; border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; }
+      .gespraech-block { border: 1.5px solid #dbd8ca; border-radius: 8px; padding: 14px; margin-bottom: 16px; page-break-inside: avoid; }
+      .gespraech-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+      .person { font-size: 15px; font-weight: bold; color: #0B3948; }
+      .datum { font-size: 11px; color: #8e897a; }
+      .divider { border: none; border-top: 1px solid #dbd8ca; margin: 12px 0; }
+      .section-vor { color: #5da7b2; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+      .section-nach { color: #9f8252; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+      .footer { margin-top: 32px; padding-top: 12px; border-top: 1px solid #dbd8ca; font-size: 10px; color: #8e897a; text-align: center; }
+      @media print { .gespraech-block { page-break-inside: avoid; } }
+    </style>
+    </head><body>
+    <h1>🧭 Gesprächs-Kompass</h1>
+    <div class="sub">Change Maker Karriere Beratung · Kathrin Heinrich · Exportiert am ${today}</div>
+  `;
+
+  // OPTIONEN
+  if (appData.optionen.length > 0) {
+    html += `<h2>Meine Optionen</h2>`;
+    appData.optionen.forEach((opt, i) => {
+      const avg = getAvgScore(opt.id);
+      const gs = appData.gespraeche.filter(g => g.optionId == opt.id).length;
+      html += `<div class="option-block">
+        <div style="font-size:13px;font-weight:bold;color:#0B3948;">Option ${i+1}: ${opt.name}</div>
+        ${opt.desc ? `<div style="font-size:11px;color:#8e897a;margin-top:4px;">${opt.desc}</div>` : ''}
+        ${opt.pro ? `<div style="font-size:11px;color:#2d6a2d;margin-top:6px;">✅ ${opt.pro}</div>` : ''}
+        ${opt.con ? `<div style="font-size:11px;color:#856404;margin-top:4px;">⚠️ ${opt.con}</div>` : ''}
+        <div style="margin-top:8px;font-size:11px;color:#0B3948;">Ø Empfinden: <strong>${avg > 0 ? avg.toFixed(1) + '/10' : 'noch kein Empfinden'}</strong> · ${gs} Gespräch(e)</div>
+      </div>`;
+    });
+  }
+
+  // PLANUNG
+  if (appData.planung && appData.planung.length > 0) {
+    html += `<h2>Gesprächsplanung</h2>`;
+    const statusLabel = { geplant: '📅 Geplant', stattgefunden: '✅ Stattgefunden', verschoben: '⏸ Verschoben' };
+    appData.planung.forEach(p => {
+      html += `<div style="display:flex;justify-content:space-between;padding:8px 10px;background:#f5f0e8;border-radius:6px;margin-bottom:6px;">
+        <div><strong>${p.person}</strong>${p.optionName ? ` · ${p.optionName}` : ''}${p.wann ? ` · ${p.wann}` : ''}</div>
+        <div style="font-size:11px;">${statusLabel[p.status]||p.status}</div>
+      </div>`;
+    });
+  }
+
+  // GESPRÄCHE
+  if (appData.gespraeche.length > 0) {
+    html += `<h2>Dokumentierte Gespräche (${appData.gespraeche.length})</h2>`;
+    appData.gespraeche.forEach((g, i) => {
+      const d = new Date(g.datum + 'T00:00:00');
+      const dateStr = d.toLocaleDateString('de-DE', { day:'numeric', month:'long', year:'numeric' });
+      html += `<div class="gespraech-block">
+        <div class="gespraech-header">
+          <div class="person">👤 ${g.person}</div>
+          <div class="datum">${dateStr}${g.optionName ? ' · ' + g.optionName : ''}</div>
+        </div>
+        <div class="section-vor">VOR DEM GESPRÄCH</div>
+        ${g.wissen ? `<div class="label">Was ich wissen wollte</div><div class="val">${g.wissen}</div>` : ''}
+        ${g.intentionWas ? `<div class="label">Intention — Was</div><div class="val purple">${g.intentionWas}</div>` : ''}
+        ${g.intentionNicht ? `<div class="label">Intention — Was nicht</div><div class="val purple">${g.intentionNicht}</div>` : ''}
+        ${g.intentionWirken ? `<div class="label">Intention — Wie wirken</div><div class="val purple">${g.intentionWirken}</div>` : ''}
+        ${g.haltung && g.haltung.length > 0 ? `<div class="label">Haltung</div><div class="val">${g.haltung.join(' · ')}${g.haltungFreitext ? ' · ' + g.haltungFreitext : ''}</div>` : ''}
+        <hr class="divider">
+        <div class="section-nach">NACH DEM GESPRÄCH</div>
+        ${g.erfahren ? `<div class="label">Was ich erfahren habe</div><div class="val">${g.erfahren}</div>` : ''}
+        ${g.ueberraschung ? `<div class="label">Was mich überrascht hat</div><div class="val">${g.ueberraschung}</div>` : ''}
+        ${g.koerper ? `<div class="label">Körpergefühl</div><div class="val">${g.koerper}</div>` : ''}
+        ${g.empfinden ? `<div class="label">Empfinden auf Skala 1-10</div><div class="score">${g.empfinden}/10</div>` : ''}
+        ${g.gruende ? `<div class="label">3 gute Gründe für diese Option</div><div class="val gold">${g.gruende}</div>` : ''}
+        ${g.weitere ? `<div class="label">Weitere Gesprächspartner</div><div class="val">${g.weitere}</div>` : ''}
+        ${g.neueOptionen ? `<div class="label">Neue Optionen entstanden</div><div class="val">${g.neueOptionen}</div>` : ''}
+        ${g.fragen ? `<div class="label">Offene Fragen</div><div class="val">${g.fragen}</div>` : ''}
+      </div>`;
+    });
+  }
+
+  // GESAMTBILD
+  if (appData.gesamtbild && (appData.gesamtbild.verdichtet || appData.gesamtbild.unklar || appData.gesamtbild.session)) {
+    html += `<h2>Gesamtreflexion</h2>`;
+    if (appData.gesamtbild.verdichtet) html += `<div class="label">Was sich verdichtet</div><div class="val">${appData.gesamtbild.verdichtet}</div>`;
+    if (appData.gesamtbild.unklar) html += `<div class="label">Was noch unklar ist</div><div class="val">${appData.gesamtbild.unklar}</div>`;
+    if (appData.gesamtbild.session) html += `<div class="label">Für die nächste Session mit Kathrin</div><div class="val gold">${appData.gesamtbild.session}</div>`;
+  }
+
+  html += `<div class="footer">Change Maker Karriere Beratung · Kathrin Heinrich · info@kathrinheinrich.de</div>
+  </body></html>`;
+
+  const win = window.open('', '_blank');
+  win.document.write(html);
+  win.document.close();
+  setTimeout(() => { win.print(); }, 500);
+}
+
+// ── START ─────────────────────────────────────────────────
+checkLogin() ? init() : null;
+</script>
+</body>
+</html>
